@@ -1,0 +1,25 @@
+{
+  "name": "edge-game-one",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "ssh://idcs-498a0e539cbd4f22b7da1e9b8701e39f.gabriel.walsh%40oracle.com@icvbs-ugbudemos.developer.ocp.oraclecloud.com/icvbs-ugbudemos_innovationlab_19951/Edge2024WOF.git",
+  "author": "miranada.bishard@oracle.com",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node esbuild.config.js -w",
+    "build": "node esbuild.config.js"
+  },
+  "dependencies": {
+    "esbuild": "^0.19.11",
+    "typescript": "^5.3.3"
+  },
+  "scipts": {
+    "start": "node esbuild.config.js -w",
+    "build": "node esbuild.config.js"
+  },
+  "devDependencies": {
+    "@chialab/esbuild-plugin-html": "^0.18.0",
+    "esbuild-sass-plugin": "^2.16.1"
+  }
+}
