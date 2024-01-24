@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "^0.18.0",
-    "esbuild-sass-plugin": "^2.16.1"
+    "esbuild-sass-plugin": "^2.16.1",
+    "esbuild-serve": "^1.0.1"
   }
 }
