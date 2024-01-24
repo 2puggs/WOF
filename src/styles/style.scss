@@ -1,3 +1,54 @@
-html,body{
-  background-color: pink;
+$game_height: 400px;
+$card-back-color: blue;
+$card-edge-color: green;
+$revealed-tile-background-color: white;
+$revealed-tile-color: black;
+
+.container {
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: $game_height;
+}
+
+
+#board{
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  width: 100%;
+  height: $game_height;
+}
+
+#board .revealed {
+  background-color: rgb(84, 208, 56);
+  display: inline-block;
+}
+
+.tile {
+  align-self: flex-start;
+  text-align: center;
+  margin-right: 2px;
+  border: 1px solid rgb(150, 22, 150);
+  height: 20px;
+  width: 20px;
+  transition: background-color 300ms ease-in-out, color 400ms linear;
+  background-color: transparent;
+  color: transparent;
+  &.revealed{
+    background-color: $revealed-tile-background-color;
+    color: $revealed-tile-color;
+  }
+  &.edge{
+    background-color: $card-edge-color;
+    color: $card-edge-color;
+  }
+  &.back{
+    background-color: $card-back-color;
+    color:$card-back-color;
+  }
+  &.blank{
+    background-color: $revealed-tile-background-color;
+  }
 }

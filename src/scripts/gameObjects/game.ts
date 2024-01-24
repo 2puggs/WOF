@@ -11,6 +11,7 @@ export default class Game {
     allowedTries: number
     currentGuesses: number
     autoGuessCounter: number
+    interval: any
 
     constructor(state:GameState, tiles:Tile[][], guesses: Guess[], allowedTries:number) {
         this.state = state;
@@ -19,6 +20,7 @@ export default class Game {
         this.allowedTries = allowedTries;
         this.currentGuesses = 0;
         this.autoGuessCounter = 0;
+        this.interval = {};
     }
 
     updateGameState(){
@@ -34,17 +36,20 @@ export default class Game {
         }
         if(allDone){
             this.state = GameState.WON;
-            console.log("You win"); // Maybe we could add something like number of titles that need to be guessed here?
+            console.log("You win");
+            this.stopAutoGuesser();
         }else{
             console.log("Check for lose");
             if(this.currentGuesses >= this.allowedTries){
                 console.log("Sorry you lose.");
                 this.state = GameState.LOST;
+                this.stopAutoGuesser();
             }
         }
     }
 
     makeGuess(guessId){
+        console.log("makeGuess ",guessId);
         if(this.state === GameState.FRESH){
             this.state = GameState.IN_PLAY;
         }
@@ -95,10 +100,19 @@ export default class Game {
         }
         console.log(aGuess);
     }
-    autoGuess(){
-        if(this.autoGuessCounter < this.guesses.length){
-            this.makeGuess(this.autoGuessCounter)
-            this.autoGuessCounter++;
+    autoGuess(t: this){
+        console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+        if(t.autoGuessCounter < t.guesses.length){
+            t.makeGuess(t.autoGuessCounter)
+            t.autoGuessCounter++;
+        }else{
+            t.stopAutoGuesser();
         }
+    }
+    autoGuesser(){
+        this.interval = setInterval(this.autoGuess, 500, this);
+    }
+    stopAutoGuesser(){
+        clearInterval(this.interval)
     }
 }

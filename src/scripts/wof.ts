@@ -56,11 +56,20 @@ const initializeLetterFromPhraseGuesses =(phrase) => {
 const makeTiles = (words, columns) => {
     let id = 0;
     const tiles = [];
+    const boardElement = document.getElementById("board");
     for(let w =0; w<words.length; w++){
         tiles[w]=[];
         for(let l=0; l<words[w].length; l++){
             let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], TileState.GUESSABLE);
+            aTile.updateStyle();
             tiles[w].push(aTile);
+            boardElement.appendChild(aTile.html);
+            if (w<words.length-1 && l==words[w].length-1){
+                let aBlankTile = new Tile(null, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", TileState.BLANK);
+                aBlankTile.updateStyle();
+                tiles[w].push(aBlankTile);
+                boardElement.appendChild(aBlankTile.html);
+            }
             id++;
         }
     }
@@ -87,5 +96,10 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
 
-let game:Game = buildGame("Artificial Intelligence is not General yet", true, 5);
-// game.autoGuesser();
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    let game:Game = buildGame("Artificial Intelligence is not General yet", true, 200);
+    game.autoGuesser();
+});
+
+

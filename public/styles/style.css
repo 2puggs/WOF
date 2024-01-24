@@ -1,5 +1,45 @@
 /* src/styles/style.scss */
-html,
-body {
-  background-color: pink;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 400px;
+}
+#board {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  width: 100%;
+  height: 400px;
+}
+#board .revealed {
+  background-color: rgb(84, 208, 56);
+  display: inline-block;
+}
+.tile {
+  align-self: flex-start;
+  text-align: center;
+  margin-right: 2px;
+  border: 1px solid rgb(150, 22, 150);
+  height: 20px;
+  width: 20px;
+  transition: background-color 300ms ease-in-out, color 400ms linear;
+  background-color: transparent;
+  color: transparent;
+}
+.tile.revealed {
+  background-color: white;
+  color: black;
+}
+.tile.edge {
+  background-color: green;
+  color: green;
+}
+.tile.back {
+  background-color: blue;
+  color: blue;
+}
+.tile.blank {
+  background-color: white;
 }
