@@ -40,6 +40,7 @@ const shuffle = (array: Array<any>) => {
     return array;
 }
 
+console.log(TileState.ANIMATING);
 
 const initializeLetterFromPhraseGuesses =(phrase) => {
     phrase = phrase.toUpperCase();

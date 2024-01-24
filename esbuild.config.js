@@ -12,6 +12,6 @@ esbuild
         plugins:[sassPlugin(), htmlPlugin()]
     })
     .then(()=> {
-        esbuildServe({},{port: 3030, servedir:'./dist'}).then(()=> console.log("ES Build complete"))
+        esbuildServe({},{port: 3030, servedir:'./public'}).then(()=> console.log("ES Build complete"))
     })
     .catch(()=> {process.exit(1),  console.log("ESBuild Failed")})

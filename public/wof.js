@@ -1,17 +1,24 @@
 (() => {
+  var __defProp = Object.defineProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __publicField = (obj, key, value) => {
+    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+    return value;
+  };
+
   // src/scripts/constants/displayConstants.ts
   var TILE_DIMENSION = 100;
 
   // src/scripts/gameObjects/tile.ts
   var Tile = class {
-    id;
-    height;
-    width;
-    row;
-    column;
-    letter;
-    state;
     constructor(id, height, width, row, column, letter, state) {
+      __publicField(this, "id");
+      __publicField(this, "height");
+      __publicField(this, "width");
+      __publicField(this, "row");
+      __publicField(this, "column");
+      __publicField(this, "letter");
+      __publicField(this, "state");
       this.id = id;
       this.height = height;
       this.width = width;
@@ -38,10 +45,10 @@
 
   // src/scripts/gameObjects/guess.ts
   var Guess = class {
-    id;
-    letter;
-    state;
     constructor(id, letter, state) {
+      __publicField(this, "id");
+      __publicField(this, "letter");
+      __publicField(this, "state");
       this.id = id;
       this.letter = letter;
       this.state = state;
@@ -73,13 +80,13 @@
 
   // src/scripts/gameObjects/game.ts
   var Game = class {
-    state;
-    tiles;
-    guesses;
-    allowedTries;
-    currentGuesses;
-    autoGuessCounter;
     constructor(state, tiles, guesses, allowedTries) {
+      __publicField(this, "state");
+      __publicField(this, "tiles");
+      __publicField(this, "guesses");
+      __publicField(this, "allowedTries");
+      __publicField(this, "currentGuesses");
+      __publicField(this, "autoGuessCounter");
       this.state = state;
       this.tiles = tiles;
       this.guesses = guesses;
