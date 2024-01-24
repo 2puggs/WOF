@@ -1,3 +1,63 @@
-html,body{
-  background-color: pink;
+.container {
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 400px;
+  border: 1px solid pink;
+}
+
+
+#board{
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  width: 100%;
+  height: 400px;
+}
+
+.back{
+  background-color: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+}
+
+.edge {
+  background-color: hotpink;
+}
+#board .revealed {
+  background-color: rgb(84, 208, 56);
+  display: inline-block;
+}
+
+.tile {
+  align-self: flex-start;
+  text-align: center;
+  margin-right: 2px;
+  border: 1px solid rgb(150, 22, 150);
+  height: 20px;
+  width: 20px;
+}
+
+#text {
+  font-weight: 200;
+  font-size: 20px;
+  color: white;
+}
+
+/* making a css class to correspond to object state-> what do these tiles look like  */
+
+.guessed {
+  background-color: blue;
+}
+
+
+.border {
+  background-color: rgb(89, 89, 89);
+}
+
+.board .word-bank {
+
+  display: none;
+  flex-direction: row;
+
 }

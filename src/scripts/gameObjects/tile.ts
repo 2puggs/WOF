@@ -8,6 +8,7 @@ export default class Tile {
     column: number
     letter: string
     state: TileState
+    html: HTMLElement;
     constructor(id:number, height: number, width: number, row: number, column: number, letter: string, state: TileState){
         this.id = id;
         this.height = height;
