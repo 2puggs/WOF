@@ -61,12 +61,12 @@ const makeTiles = (words, columns) => {
         tiles[w]=[];
         for(let l=0; l<words[w].length; l++){
             let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], TileState.GUESSABLE);
-            aTile.html.className = TileStateToCSS(aTile.state);
+            aTile.updateStyle();
             tiles[w].push(aTile);
             boardElement.appendChild(aTile.html);
-            if (w<<words.length-1 && l==words[w].length-1){
-                let aBlankTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", TileState.BLANK);
-                aBlankTile.html.className = TileStateToCSS(aBlankTile.state);
+            if (w<words.length-1 && l==words[w].length-1){
+                let aBlankTile = new Tile(null, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", TileState.BLANK);
+                aBlankTile.updateStyle();
                 tiles[w].push(aBlankTile);
                 boardElement.appendChild(aBlankTile.html);
             }
@@ -96,28 +96,10 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
 
-function TileStateToCSS(state) { //make the switch func here
-    let style = "tile";
-    switch (state) {
-        case TileState.GUESSED:
-            style += " revealed";
-            break;
-        case TileState.GUESSABLE:
-            style += " back";
-            break;
-        case TileState.BORDER: // we don't have this assignment yet
-            style += " edge";
-            break;
-        case TileState.BLANK: // we don't have this assignment yet
-            style += " blank";
-            break;
-        default:
-            console.log("unknown tile state");
-    }
-    return style
-}
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    let game:Game = buildGame("Artificial Intelligence is not General yet", true, 5);
+    let game:Game = buildGame("Artificial Intelligence is not General yet", true, 200);
+    game.autoGuesser();
 });
+
 

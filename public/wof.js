@@ -9,6 +9,17 @@
   // src/scripts/constants/displayConstants.ts
   var TILE_DIMENSION = 100;
 
+  // src/scripts/gameObjects/states/tileState.ts
+  var TileState = /* @__PURE__ */ ((TileState2) => {
+    TileState2[TileState2["GUESSED"] = 1] = "GUESSED";
+    TileState2[TileState2["GUESSABLE"] = 2] = "GUESSABLE";
+    TileState2[TileState2["BORDER"] = 3] = "BORDER";
+    TileState2[TileState2["ANIMATING"] = 4] = "ANIMATING";
+    TileState2[TileState2["BLANK"] = 5] = "BLANK";
+    return TileState2;
+  })(TileState || {});
+  var tileState_default = TileState;
+
   // src/scripts/gameObjects/tile.ts
   var Tile = class {
     constructor(id, height, width, row, column, letter, state) {
@@ -28,24 +39,34 @@
       this.letter = letter;
       this.state = state;
       this.html = document.createElement("div");
-      this.html.dataset.tile = id.toString();
+      this.html.dataset.tile = id === null ? "blank" : id.toString();
       this.html.textContent = this.letter;
     }
     changeState(updateState) {
       this.state = updateState;
+      this.updateStyle();
+    }
+    updateStyle() {
+      let style = "tile";
+      switch (this.state) {
+        case tileState_default.GUESSED:
+          style += " revealed";
+          break;
+        case tileState_default.GUESSABLE:
+          style += " back";
+          break;
+        case tileState_default.BORDER:
+          style += " edge";
+          break;
+        case tileState_default.BLANK:
+          style += " blank";
+          break;
+        default:
+          console.log("unknown tile state");
+      }
+      this.html.className = style;
     }
   };
-
-  // src/scripts/gameObjects/states/tileState.ts
-  var TileState = /* @__PURE__ */ ((TileState2) => {
-    TileState2[TileState2["GUESSED"] = 1] = "GUESSED";
-    TileState2[TileState2["GUESSABLE"] = 2] = "GUESSABLE";
-    TileState2[TileState2["BORDER"] = 3] = "BORDER";
-    TileState2[TileState2["ANIMATING"] = 4] = "ANIMATING";
-    TileState2[TileState2["BLANK"] = 5] = "BLANK";
-    return TileState2;
-  })(TileState || {});
-  var tileState_default = TileState;
 
   // src/scripts/gameObjects/guess.ts
   var Guess = class {
@@ -91,12 +112,14 @@
       __publicField(this, "allowedTries");
       __publicField(this, "currentGuesses");
       __publicField(this, "autoGuessCounter");
+      __publicField(this, "interval");
       this.state = state;
       this.tiles = tiles;
       this.guesses = guesses;
       this.allowedTries = allowedTries;
       this.currentGuesses = 0;
       this.autoGuessCounter = 0;
+      this.interval = {};
     }
     updateGameState() {
       console.log("Check for win");
@@ -112,11 +135,13 @@
       if (allDone) {
         this.state = gameState_default.WON;
         console.log("You win");
+        this.stopAutoGuesser();
       } else {
         console.log("Check for lose");
         if (this.currentGuesses >= this.allowedTries) {
           console.log("Sorry you lose.");
           this.state = gameState_default.LOST;
+          this.stopAutoGuesser();
         }
       }
     }
@@ -170,11 +195,20 @@
       }
       console.log(aGuess);
     }
-    autoGuess() {
-      if (this.autoGuessCounter < this.guesses.length) {
-        this.makeGuess(this.autoGuessCounter);
-        this.autoGuessCounter++;
+    autoGuess(t) {
+      console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+      if (t.autoGuessCounter < t.guesses.length) {
+        t.makeGuess(t.autoGuessCounter);
+        t.autoGuessCounter++;
+      } else {
+        t.stopAutoGuesser();
       }
+    }
+    autoGuesser() {
+      this.interval = setInterval(this.autoGuess, 500, this);
+    }
+    stopAutoGuesser() {
+      clearInterval(this.interval);
     }
   };
 
@@ -228,12 +262,12 @@
       tiles[w] = [];
       for (let l = 0; l < words[w].length; l++) {
         let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], tileState_default.GUESSABLE);
-        aTile.html.className = TileStateToCSS(aTile.state);
+        aTile.updateStyle();
         tiles[w].push(aTile);
         boardElement.appendChild(aTile.html);
-        if (w << words.length - 1 && l == words[w].length - 1) {
-          let aBlankTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", tileState_default.BLANK);
-          aBlankTile.html.className = TileStateToCSS(aBlankTile.state);
+        if (w < words.length - 1 && l == words[w].length - 1) {
+          let aBlankTile = new Tile(null, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", tileState_default.BLANK);
+          aBlankTile.updateStyle();
           tiles[w].push(aBlankTile);
           boardElement.appendChild(aBlankTile.html);
         }
@@ -260,27 +294,8 @@
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
-  function TileStateToCSS(state) {
-    let style = "tile";
-    switch (state) {
-      case tileState_default.GUESSED:
-        style += " revealed";
-        break;
-      case tileState_default.GUESSABLE:
-        style += " back";
-        break;
-      case tileState_default.BORDER:
-        style += " edge";
-        break;
-      case tileState_default.BLANK:
-        style += " blank";
-        break;
-      default:
-        console.log("unknown tile state");
-    }
-    return style;
-  }
   document.addEventListener("DOMContentLoaded", (event) => {
-    let game = buildGame("Artificial Intelligence is not General yet", true, 5);
+    let game = buildGame("Artificial Intelligence is not General yet", true, 200);
+    game.autoGuesser();
   });
 })();
