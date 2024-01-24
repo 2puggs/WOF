@@ -45,6 +45,7 @@ export default class Game {
     }
 
     makeGuess(guessId){
+        console.log("makeGuess ",guessId);
         if(this.state === GameState.FRESH){
             this.state = GameState.IN_PLAY;
         }

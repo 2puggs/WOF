@@ -17,6 +17,9 @@ export default class Tile {
         this.column = column;
         this.letter = letter;
         this.state = state;
+        this.html = document.createElement("div");
+        this.html.dataset.tile = id.toString();
+        this.html.textContent = this.letter;
     }
     changeState(updateState){
         this.state = updateState;

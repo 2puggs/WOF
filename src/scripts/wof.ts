@@ -66,7 +66,7 @@ const makeTiles = (words, columns) => {
             boardElement.appendChild(aTile.html);
             if (w<<words.length-1 && l==words[w].length-1){
                 let aBlankTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", TileState.BLANK);
-                aBlankTile.html.className = TileStateToCSS(aTile.state);
+                aBlankTile.html.className = TileStateToCSS(aBlankTile.state);
                 tiles[w].push(aBlankTile);
                 boardElement.appendChild(aBlankTile.html);
             }

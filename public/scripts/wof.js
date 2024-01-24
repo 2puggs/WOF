@@ -11,6 +11,7 @@
     column;
     letter;
     state;
+    html;
     constructor(id, height, width, row, column, letter, state) {
       this.id = id;
       this.height = height;
@@ -19,6 +20,9 @@
       this.column = column;
       this.letter = letter;
       this.state = state;
+      this.html = document.createElement("div");
+      this.html.dataset.tile = id.toString();
+      this.html.textContent = this.letter;
     }
     changeState(updateState) {
       this.state = updateState;
@@ -110,6 +114,7 @@
       }
     }
     makeGuess(guessId) {
+      console.log("makeGuess ", guessId);
       if (this.state === gameState_default.FRESH) {
         this.state = gameState_default.IN_PLAY;
       }
@@ -211,11 +216,20 @@
   var makeTiles = (words, columns) => {
     let id = 0;
     const tiles = [];
+    const boardElement = document.getElementById("board");
     for (let w = 0; w < words.length; w++) {
       tiles[w] = [];
       for (let l = 0; l < words[w].length; l++) {
         let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], tileState_default.GUESSABLE);
+        aTile.html.className = TileStateToCSS(aTile.state);
         tiles[w].push(aTile);
+        boardElement.appendChild(aTile.html);
+        if (w << words.length - 1 && l == words[w].length - 1) {
+          let aBlankTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", tileState_default.BLANK);
+          aBlankTile.html.className = TileStateToCSS(aBlankTile.state);
+          tiles[w].push(aBlankTile);
+          boardElement.appendChild(aBlankTile.html);
+        }
         id++;
       }
     }
@@ -239,5 +253,27 @@
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
-  var game = buildGame("Artificial Intelligence is not General yet", true, 5);
+  function TileStateToCSS(state) {
+    let style = "tile";
+    switch (state) {
+      case tileState_default.GUESSED:
+        style += " revealed";
+        break;
+      case tileState_default.GUESSABLE:
+        style += " back";
+        break;
+      case tileState_default.BORDER:
+        style += " edge";
+        break;
+      case tileState_default.BLANK:
+        style += " blank";
+        break;
+      default:
+        console.log("unknown tile state");
+    }
+    return style;
+  }
+  document.addEventListener("DOMContentLoaded", (event) => {
+    let game = buildGame("Artificial Intelligence is not General yet", true, 5);
+  });
 })();
