@@ -53,25 +53,36 @@ const initializeLetterFromPhraseGuesses =(phrase) => {
     return guesses;
 }
 
-const makeTiles = (words, columns) => {
+const fillerUp = (numTiles: number, word: string ):Tile[] => {
+    const tileGroup: Tile[] = [];
+    return tileGroup;
+
+}
+
+const makeTiles = (words) => {
     let id = 0;
     const tiles = [];
     const boardElement = document.getElementById("board");
     for(let w =0; w<words.length; w++){
+        // switch (w) {
+        //     case 0:
+        //     add a full row of blanks
+        //     case w === words[w].length - 1:
+        //     add a full row of blanks on last row
+        //     default:
+        //      fillerUp
+        // }
+        let aDiv = document.createElement("div");
+        aDiv.className = "tile-row";
         tiles[w]=[];
         for(let l=0; l<words[w].length; l++){
             let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], TileState.GUESSABLE);
             aTile.updateStyle();
             tiles[w].push(aTile);
-            boardElement.appendChild(aTile.html);
-            if (w<words.length-1 && l==words[w].length-1){
-                let aBlankTile = new Tile(null, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", TileState.BLANK);
-                aBlankTile.updateStyle();
-                tiles[w].push(aBlankTile);
-                boardElement.appendChild(aBlankTile.html);
-            }
+            aDiv.appendChild(aTile.html);
             id++;
         }
+        boardElement.appendChild(aDiv);
     }
     return tiles;
 }
@@ -91,7 +102,9 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
             longest_word = currentValue;
         }
     }, longest_word);
-    let tiles = makeTiles(words, longest_word_length);
+
+    let tiles = makeTiles(words);
+
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }

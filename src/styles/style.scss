@@ -15,7 +15,7 @@ $revealed-tile-color: black;
 
 #board{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin-top: 10px;
   width: 100%;
   height: $game_height;
@@ -51,4 +51,10 @@ $revealed-tile-color: black;
   &.blank{
     background-color: $revealed-tile-background-color;
   }
+}
+
+.tile-row{
+  display: flex;
+  flex-direction: row;
+  align-content: start;
 }
