@@ -247,25 +247,62 @@
     guesses = shuffle(guesses);
     return guesses;
   };
-  var makeTiles = (words, columns) => {
+  var alignMe = (totalColumns, columnsToCenter) => {
+    let pad = totalColumns / 2 - columnsToCenter / 2;
+    let tailPad = pad;
+    if (pad % 2 !== 0) {
+      let remainder = pad - Math.floor(totalColumns / 2 - columnsToCenter / 2);
+      pad = Math.floor(totalColumns / 2 - columnsToCenter / 2);
+      remainder += tailPad - Math.floor(totalColumns / 2 - columnsToCenter / 2);
+      tailPad = Math.floor(totalColumns / 2 - columnsToCenter / 2) + remainder;
+    }
+    return [pad, columnsToCenter, tailPad];
+  };
+  var generateBorders = (padCount) => {
+    let padded = "";
+    let index = padCount;
+    while (index > 0) {
+      padded += "~";
+      index--;
+    }
+    return padded;
+  };
+  var padWords = (words, padCount) => {
+    let paddedWords = [];
+    const borderRow = generateBorders(padCount);
+    for (let i = 0; i < words.length; i++) {
+      if (i === 0) {
+        paddedWords.push(borderRow);
+      }
+      let padPlan = alignMe(padCount, words[i].length);
+      paddedWords.push(generateBorders(padPlan[0]) + words[i] + generateBorders(padPlan[2]));
+      if (i == words.length - 1) {
+        paddedWords.push(borderRow);
+      }
+    }
+    return paddedWords;
+  };
+  var makeTiles = (words) => {
     let id = 0;
     const tiles = [];
     const boardElement = document.getElementById("board");
     for (let w = 0; w < words.length; w++) {
+      let aDiv = document.createElement("div");
+      aDiv.className = "tile-row";
       tiles[w] = [];
       for (let l = 0; l < words[w].length; l++) {
-        let aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l, w, words[w][l], tileState_default.GUESSABLE);
+        let aTile;
+        if (words[w][l] !== "~") {
+          aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l + 1, w + 1, words[w][l], tileState_default.GUESSABLE);
+        } else {
+          aTile = new Tile(id, TILE_DIMENSION, TILE_DIMENSION, l + 1, w + 1, " ", tileState_default.BORDER);
+        }
         aTile.updateStyle();
         tiles[w].push(aTile);
-        boardElement.appendChild(aTile.html);
-        if (w < words.length - 1 && l == words[w].length - 1) {
-          let aBlankTile = new Tile(null, TILE_DIMENSION, TILE_DIMENSION, l, w, " ", tileState_default.BLANK);
-          aBlankTile.updateStyle();
-          tiles[w].push(aBlankTile);
-          boardElement.appendChild(aBlankTile.html);
-        }
+        aDiv.appendChild(aTile.html);
         id++;
       }
+      boardElement.appendChild(aDiv);
     }
     return tiles;
   };
@@ -274,7 +311,7 @@
     return alpha.map((x) => String.fromCharCode(x));
   };
   var buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
-    const words = phrase.toUpperCase().split(" ");
+    let words = phrase.toUpperCase().split(" ");
     let longest_word_length = 0;
     let longest_word = "";
     words.reduce((accumulator, currentValue) => {
@@ -283,7 +320,8 @@
         longest_word = currentValue;
       }
     }, longest_word);
-    let tiles = makeTiles(words, longest_word_length);
+    words = padWords(words, longest_word_length + 2);
+    let tiles = makeTiles(words);
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
