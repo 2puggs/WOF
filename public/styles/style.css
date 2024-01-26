@@ -2,43 +2,61 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  height: 400px;
+  align-items: center;
+  justify-content: center;
+  min-height: 90%;
 }
 #board {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  width: 100%;
-  height: 400px;
+  height: 90%;
 }
 #board .revealed {
-  background-color: rgb(84, 208, 56);
-  display: inline-block;
+  align-items: center;
+  display: inline-grid;
+}
+.alphabet-container {
+  border: 2px solid black;
+  border-radius: 13px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+.alphabet-row {
+  display: flex;
+  font-family: Sniglet;
+  font-size: 24px;
+}
+.alphabet-row > div {
+  padding: 5px;
+  margin: 5px;
+  flex-grow: 1;
+  text-align: center;
 }
 .tile {
   align-self: flex-start;
+  font-size: 35px;
   text-align: center;
   margin-right: 2px;
-  border: 1px solid rgb(150, 22, 150);
-  height: 20px;
-  width: 20px;
-  transition: background-color 300ms ease-in-out, color 400ms linear;
-  background-color: transparent;
+  border: 2px solid rgb(7, 2, 7);
+  height: 45px;
+  width: 45px;
+  transition: background-color 600ms cubic-bezier(0.11, 0.24, 0.28, 0.98), color 800ms linear;
   color: transparent;
 }
 .tile.revealed {
   background-color: white;
   color: black;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+  font-size: 30px;
 }
 .tile.edge {
-  background-color: green;
-  color: green;
+  background-color: rgb(30, 152, 30);
+  color: rgb(30, 152, 30);
 }
 .tile.back {
-  background-color: blue;
-  color: blue;
+  background-color: rgb(212, 215, 212);
+  color: rgb(212, 215, 212);
 }
 .tile.blank {
   background-color: white;
@@ -47,4 +65,5 @@
   display: flex;
   flex-direction: row;
   align-content: start;
+  margin-bottom: 2px;
 }

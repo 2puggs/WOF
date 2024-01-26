@@ -59,7 +59,7 @@ class Tile {
             //const tempTileVal = temp.dataset.tile
             if (this.html.dataset.tile === this.id) {
                 temp.className= ''; //remove current class
-                //temp.classList.remove('revealed','back', 'edge');
+                //temp.classList.remove('revealed','', 'edge');
                 temp.className = TileStateToCSS(this.state);
             }
         });

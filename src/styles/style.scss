@@ -1,44 +1,65 @@
-$game_height: 400px;
-$card-back-color: blue;
-$card-edge-color: green;
+$game_height: 90%;
+$card-back-color: rgb(212, 215, 212);
+$card-edge-color: rgb(30, 152, 30);
 $revealed-tile-background-color: white;
 $revealed-tile-color: black;
 
 .container {
   display:flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  height: $game_height;
+  align-items: center;
+  justify-content: center;
+  min-height: $game_height;
+  margin-bottom: 15px;;
 }
-
 
 #board{
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  width: 100%;
   height: $game_height;
 }
 
 #board .revealed {
-  background-color: rgb(84, 208, 56);
-  display: inline-block;
+  align-items: center;
+  display: inline-grid;
+}
+.alphabet-container {
+  margin-top: 15px;
+  border:2px solid black;
+  border-radius: 13px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.alphabet-row {
+  display:flex;
+  font-family: Sniglet; 
+  font-size: 24px; 
+}
+
+.alphabet-row > div {
+  padding: 5px;
+  margin: 5px;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .tile {
   align-self: flex-start;
+  font-size: 35px;
   text-align: center;
   margin-right: 2px;
-  border: 1px solid rgb(150, 22, 150);
-  height: 20px;
-  width: 20px;
-  transition: background-color 300ms ease-in-out, color 400ms linear;
-  background-color: transparent;
+  border: 2px solid rgb(7, 2, 7);
+  height: 45px;
+  width: 45px;
+  transition: background-color 600ms cubic-bezier(0.11, 0.24, 0.28, 0.98), color 800ms linear;
   color: transparent;
   &.revealed{
     background-color: $revealed-tile-background-color;
     color: $revealed-tile-color;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    font-size: 30px;
   }
   &.edge{
     background-color: $card-edge-color;
@@ -57,4 +78,5 @@ $revealed-tile-color: black;
   display: flex;
   flex-direction: row;
   align-content: start;
+  margin-bottom: 2px;
 }

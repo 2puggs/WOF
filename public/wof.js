@@ -205,7 +205,7 @@
       }
     }
     autoGuesser() {
-      this.interval = setInterval(this.autoGuess, 500, this);
+      this.interval = setInterval(this.autoGuess, 1e3, this);
     }
     stopAutoGuesser() {
       clearInterval(this.interval);
@@ -335,5 +335,31 @@
   document.addEventListener("DOMContentLoaded", (event) => {
     let game = buildGame("Artificial Intelligence is not General yet", true, 200);
     game.autoGuesser();
+    displayAlphabet();
   });
+  var displayAlphabet = () => {
+    let symbols = alphabet();
+    const container = document.createElement("div");
+    container.className = "alphabet-container";
+    const firstHalf = symbols.slice(0, 13);
+    const secondHalf = symbols.slice(13);
+    const firstRow = document.createElement("div");
+    firstRow.classList.add("alphabet-row");
+    firstHalf.forEach((letter) => {
+      const div = document.createElement("div");
+      div.textContent = letter;
+      firstRow.appendChild(div);
+    });
+    const secondRow = document.createElement("div");
+    secondRow.classList.add("alphabet-row");
+    secondHalf.forEach((letter) => {
+      const div = document.createElement("div");
+      div.textContent = letter;
+      secondRow.appendChild(div);
+    });
+    console.log(firstRow);
+    container.appendChild(firstRow);
+    container.appendChild(secondRow);
+    document.body.appendChild(container);
+  };
 })();

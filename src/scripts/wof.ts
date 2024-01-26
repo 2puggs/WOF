@@ -142,7 +142,41 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
 document.addEventListener("DOMContentLoaded", (event) => {
     let game:Game = buildGame("Artificial Intelligence is not General yet", true, 200);
     game.autoGuesser();
+    displayAlphabet();
 });
 
+
+
+const displayAlphabet = () => {
+    let symbols = alphabet();
+    const container = document.createElement('div');
+    container.className = 'alphabet-container';
+
+    const firstHalf = symbols.slice(0,13);
+    const secondHalf = symbols.slice(13);
+
+    //create first row in html 
+    const firstRow = document.createElement('div');
+    firstRow.classList.add('alphabet-row');
+    firstHalf.forEach((letter) => {
+        const div = document.createElement('div');
+        div.textContent = letter;
+        firstRow.appendChild(div);
+    });
+    
+    const secondRow = document.createElement('div');
+    secondRow.classList.add('alphabet-row');
+    secondHalf.forEach((letter) => {
+        const div = document.createElement('div');
+        div.textContent = letter;
+        secondRow.appendChild(div);
+    });
+    console.log(firstRow);
+
+    container.appendChild(firstRow);
+    container.appendChild(secondRow);
+
+    document.body.appendChild(container);
+}; //close displayAlphabet
 
 
