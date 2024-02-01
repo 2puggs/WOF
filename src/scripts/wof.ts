@@ -7,6 +7,7 @@ import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
 
 
+
 const initializeAllGuesses = () => {
     const guesses = [];
     const alphabetList = alphabet();
@@ -137,20 +138,69 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
-
-
 document.addEventListener("DOMContentLoaded", (event) => {
-    let game:Game = buildGame("Artificial Intelligence is not General yet", true, 200);
+    let game:Game = buildGame("Large Language Models", true, 200);
     game.autoGuesser();
+    bttnStart();
     displayAlphabet();
 });
+//
+const bttnStart = () => { //do i need to separate into classes since i'm creating div, start button, and switching screens? 
+    //append introScreen 
+    const intro= document.createElement('div');
+    intro.className = 'introScreen ';
+    document.body.appendChild(intro);
 
+    //create a container for the button to be placed
+    const startContainer= document.createElement('div');
+    startContainer.className = 'start-container';
+    intro.appendChild(startContainer); //append to intro screen 
+    //create the start button inside the start container 
+    const newInp = document.createElement('button');
+    newInp.type = "button";
+    newInp.className = "btn-start";
+    newInp.textContent = "START";
+    startContainer.appendChild(newInp);
+    
+    const alpha = document.getElementsByClassName('alphabet-container hidden');
+   /* const gameScreen = document.createElement('div');
+    gameScreen.className = 'gameScreen hidden';
+    document.body.appendChild(gameScreen);
 
+    const mainContainer = document.createElement('div');    
+    mainContainer.className = 'container hidden'; 
+    gameScreen.appendChild(mainContainer);
 
+    const boardContainer = document.createElement('div');
+    boardContainer.id = 'board';
+    gameScreen.appendChild(boardContainer)
+    */
+//trying to add the functionality here when the button is clicked then the main game will be revealed
+    
+startContainer.addEventListener('click', () => {
+        intro.classList.add('hidden');
+        const mainContainer = document.getElementsByClassName('container hidden')[0];
+        mainContainer.classList.remove('hidden');
+
+        const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+        alpha.classList.remove('hidden');        
+
+        //gameScreen.classList.remove('hidden');
+       
+        //startContainer.classList.add('hidden');
+    });
+
+        //check if button clicked 
+  //  newInp.onclick = function() {
+      //  alert("button was clicked");
+    //}
+   // console.log("button clicked");
+  }; //end start game 
+//
 const displayAlphabet = () => {
     let symbols = alphabet();
     const container = document.createElement('div');
-    container.className = 'alphabet-container';
+    container.className = 'alphabet-container hidden';
 
     const firstHalf = symbols.slice(0,13);
     const secondHalf = symbols.slice(13);
@@ -177,6 +227,8 @@ const displayAlphabet = () => {
     container.appendChild(secondRow);
 
     document.body.appendChild(container);
+
+    
 }; //close displayAlphabet
 
 

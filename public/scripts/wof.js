@@ -326,14 +326,36 @@
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
   document.addEventListener("DOMContentLoaded", (event) => {
-    let game = buildGame("Artificial Intelligence is not General yet", true, 200);
+    let game = buildGame("Large Language Models", true, 200);
     game.autoGuesser();
+    bttnStart();
     displayAlphabet();
   });
+  var bttnStart = () => {
+    const intro = document.createElement("div");
+    intro.className = "introScreen ";
+    document.body.appendChild(intro);
+    const startContainer = document.createElement("div");
+    startContainer.className = "start-container";
+    intro.appendChild(startContainer);
+    const newInp = document.createElement("button");
+    newInp.type = "button";
+    newInp.className = "btn-start";
+    newInp.textContent = "START";
+    startContainer.appendChild(newInp);
+    const alpha = document.getElementsByClassName("alphabet-container hidden");
+    startContainer.addEventListener("click", () => {
+      intro.classList.add("hidden");
+      const mainContainer = document.getElementsByClassName("container hidden")[0];
+      mainContainer.classList.remove("hidden");
+      const alpha2 = document.getElementsByClassName("alphabet-container hidden")[0];
+      alpha2.classList.remove("hidden");
+    });
+  };
   var displayAlphabet = () => {
     let symbols = alphabet();
     const container = document.createElement("div");
-    container.className = "alphabet-container";
+    container.className = "alphabet-container hidden";
     const firstHalf = symbols.slice(0, 13);
     const secondHalf = symbols.slice(13);
     const firstRow = document.createElement("div");
