@@ -71,19 +71,19 @@ $hover-color:  rgb(177, 221, 136);
   display: none;
 }
 .alphabet-container {
-  margin-top: 15px;
+  margin-top: 15px; // ToDo: fix double margins is top margin 0 or 15px?
   border:2px solid black;
   border-radius: 1.5px;
   box-shadow: 0px 4px 8px 0px transparentize($palette-brand-rgb-170, 0.84);
-  margin: 0 auto;
+  margin: 0 auto;// <---
   max-width: 1000px;
   background-color: $palette-brand-rgb-10;
 }
 
 .alphabet-row {
-  display:flex; 
+  display:flex;
   font-weight: 200;
-  font-size: 24px; 
+  font-size: 24px;
 }
 
 .alphabet-row > div {
@@ -91,6 +91,8 @@ $hover-color:  rgb(177, 221, 136);
   margin: 5px;
   flex-grow: 1;
   text-align: center;
+
+  // I think this div would now have add corresponding class states
 }
 
 .tile {
@@ -109,7 +111,7 @@ $hover-color:  rgb(177, 221, 136);
   flex-grow: 1;
   transition: background-color 600ms cubic-bezier(0.11, 0.24, 0.28, 0.98), color 800ms linear;
   color: transparent;
-  &.revealed{
+  &.revealed{ // like this
     background-color: $revealed-tile-background-color;
     color: $revealed-tile-color;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);

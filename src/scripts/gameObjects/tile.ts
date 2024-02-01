@@ -18,9 +18,9 @@ export default class Tile {
         this.column = column;
         this.letter = letter;
         this.state = state;
-        this.html = document.createElement("div");
-        this.html.dataset.tile = id === null ? "blank" : id.toString();
-        this.html.textContent = this.letter;
+        this.html = document.createElement("div"); // Add this
+        this.html.dataset.tile = id === null ? "blank" : id.toString(); //and this for id
+        this.html.textContent = this.letter; // and this to view the guess letter
     }
     changeState(updateState) {
         this.state = updateState;
@@ -45,5 +45,7 @@ export default class Tile {
                 console.log("unknown tile state");
         }
         this.html.className = style;
+
+        // then make a version of this that updates the guess style
     }
 }
