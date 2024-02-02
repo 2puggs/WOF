@@ -60,11 +60,10 @@
   display: none;
 }
 .alphabet-container {
-  margin-top: 15px;
   border: 2px solid black;
   border-radius: 1.5px;
   box-shadow: 0px 4px 8px 0px rgba(5, 50, 66, 0.16);
-  margin: 0 auto;
+  margin: 15px 15px 0px 15px;
   max-width: 1000px;
   background-color: rgb(246, 250, 252);
 }
@@ -78,6 +77,12 @@
   margin: 5px;
   flex-grow: 1;
   text-align: center;
+}
+.alphabet-row > div.hidden {
+  background-color: red;
+}
+.alphabet-row > div.visible {
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.36);
 }
 .tile {
   align-self: flex-start;

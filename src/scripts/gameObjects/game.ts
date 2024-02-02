@@ -3,6 +3,8 @@ import Tile from "./tile";
 import TileState from "./states/tileState";
 import Guess from "./guess";
 import GuessState from "./states/guessState";
+import WordbankState from "./states/wordbankState";
+import WordBank from "./wordbank";
 
 export default class Game {
     state: GameState
@@ -12,8 +14,9 @@ export default class Game {
     currentGuesses: number
     autoGuessCounter: number
     interval: any
+    wordbankLetter: WordBank
 
-    constructor(state:GameState, tiles:Tile[][], guesses: Guess[], allowedTries:number) {
+    constructor(state:GameState, tiles:Tile[][], guesses: Guess[], allowedTries:number, wordbankLetter: WordBank) {
         this.state = state;
         this.tiles = tiles;
         this.guesses = guesses;
@@ -21,6 +24,7 @@ export default class Game {
         this.currentGuesses = 0;
         this.autoGuessCounter = 0;
         this.interval = {};
+        this.wordbankLetter = wordbankLetter; //
     }
 
     updateGameState(){
@@ -53,8 +57,9 @@ export default class Game {
         if(this.state === GameState.FRESH){
             this.state = GameState.IN_PLAY;
         }
-        if(this.state === GameState.IN_PLAY){
+        if(this.state === GameState.IN_PLAY){ 
             this.guesses[guessId].changeState(GuessState.GUESSED);
+            this.guesses[guessId].updateStyle(); //2/2 modify
             for(let t=0; t<this.tiles.length; t++) {
                 for (let l = 0; l < this.tiles[t].length; l++) {
                     if (this.tiles[t][l].letter === this.guesses[guessId].letter) {
@@ -64,10 +69,12 @@ export default class Game {
             }
             this.currentGuesses++;
             this.updateGameState();
+        
+            //update the div on each letter here 
         }
 
     }
-
+/*
     logBoard(){
         let aRow = "";
         for(let r=0; r<this.tiles.length; r++){
@@ -100,17 +107,24 @@ export default class Game {
         }
         console.log(aGuess);
     }
+    */ 
     autoGuess(t: this){
+        console.log("what is t? ", t);
         console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+        let guessedLetterPass = t.guesses[t.autoGuessCounter].letter;
+        console.log("Guessed Letter is ", t.guesses[t.autoGuessCounter].letter);
+        //this.guesses[t.autoGuessCounter].updateStyle(); 2/2 didn't change the gameState 
         if(t.autoGuessCounter < t.guesses.length){
             t.makeGuess(t.autoGuessCounter)
             t.autoGuessCounter++;
+            return guessedLetterPass
         }else{
             t.stopAutoGuesser();
         }
     }
     autoGuesser(){
-        this.interval = setInterval(this.autoGuess, 1000, this);
+        this.interval = setInterval(this.autoGuess, 1500, this);
+
     }
     stopAutoGuesser(){
         clearInterval(this.interval)

@@ -5,12 +5,14 @@ import Guess from "./gameObjects/guess";
 import GuessState from "./gameObjects/states/guessState";
 import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
+import { lstat } from "fs";
 
 
 
 const initializeAllGuesses = () => {
     const guesses = [];
     const alphabetList = alphabet();
+    
     for(let a=0; a<alphabetList.length; a++){
         let aGuess = new Guess(a, alphabetList[a], GuessState.FRESH);
         guesses.push(aGuess);
@@ -163,42 +165,22 @@ const bttnStart = () => { //do i need to separate into classes since i'm creatin
     startContainer.appendChild(newInp);
     
     const alpha = document.getElementsByClassName('alphabet-container hidden');
-   /* const gameScreen = document.createElement('div');
-    gameScreen.className = 'gameScreen hidden';
-    document.body.appendChild(gameScreen);
-
-    const mainContainer = document.createElement('div');    
-    mainContainer.className = 'container hidden'; 
-    gameScreen.appendChild(mainContainer);
-
-    const boardContainer = document.createElement('div');
-    boardContainer.id = 'board';
-    gameScreen.appendChild(boardContainer)
-    */
 //trying to add the functionality here when the button is clicked then the main game will be revealed
     
-startContainer.addEventListener('click', () => {
+    startContainer.addEventListener('click', () => {
         intro.classList.add('hidden');
         const mainContainer = document.getElementsByClassName('container hidden')[0];
         mainContainer.classList.remove('hidden');
 
         const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
         alpha.classList.remove('hidden');        
-
-        //gameScreen.classList.remove('hidden');
-       
-        //startContainer.classList.add('hidden');
     });
 
-        //check if button clicked 
-  //  newInp.onclick = function() {
-      //  alert("button was clicked");
-    //}
-   // console.log("button clicked");
   }; //end start game 
 //
 const displayAlphabet = () => {
     let symbols = alphabet();
+    console.log("symbols are " , symbols);
     const container = document.createElement('div');
     container.className = 'alphabet-container hidden';
 
@@ -210,6 +192,7 @@ const displayAlphabet = () => {
     firstRow.classList.add('alphabet-row');
     firstHalf.forEach((letter) => {
         const div = document.createElement('div');
+        div.className = "letter";
         div.textContent = letter;
         firstRow.appendChild(div);
     });
@@ -231,4 +214,8 @@ const displayAlphabet = () => {
     
 }; //close displayAlphabet
 
-
+/*
+pseudo code for the word bank
+get the letter guessed and map it to the letter in the word bank,
+in css adjust the class of the letter to be hidden 
+*/ 

@@ -61,23 +61,6 @@
     }
   };
 
-  // src/scripts/gameObjects/guess.ts
-  var Guess = class {
-    id;
-    letter;
-    state;
-    constructor(id, letter, state) {
-      this.id = id;
-      this.letter = letter;
-      this.state = state;
-    }
-    changeState(updateState) {
-      this.state = updateState;
-      switch (this.state) {
-      }
-    }
-  };
-
   // src/scripts/gameObjects/states/guessState.ts
   var GuessState = /* @__PURE__ */ ((GuessState2) => {
     GuessState2[GuessState2["FRESH"] = 1] = "FRESH";
@@ -85,6 +68,41 @@
     return GuessState2;
   })(GuessState || {});
   var guessState_default = GuessState;
+
+  // src/scripts/gameObjects/guess.ts
+  var Guess = class {
+    id;
+    letter;
+    state;
+    html;
+    constructor(id, letter, state) {
+      this.id = id;
+      this.letter = letter;
+      this.state = state;
+      this.html = document.createElement("div");
+      this.html.textContent = this.letter;
+    }
+    changeState(updateState) {
+      this.state = updateState;
+      switch (this.state) {
+      }
+    }
+    updateStyle() {
+      let style = "letter";
+      switch (this.state) {
+        case guessState_default.FRESH:
+          style += " visible";
+          break;
+        case guessState_default.GUESSED:
+          style += " hidden";
+          break;
+        default:
+          console.log("unknown tile state");
+      }
+      this.html.className = style;
+      console.log("style is ", this.html.className);
+    }
+  };
 
   // src/scripts/gameObjects/states/gameState.ts
   var GameState = /* @__PURE__ */ ((GameState2) => {
@@ -105,7 +123,8 @@
     currentGuesses;
     autoGuessCounter;
     interval;
-    constructor(state, tiles, guesses, allowedTries) {
+    wordbankLetter;
+    constructor(state, tiles, guesses, allowedTries, wordbankLetter) {
       this.state = state;
       this.tiles = tiles;
       this.guesses = guesses;
@@ -113,6 +132,7 @@
       this.currentGuesses = 0;
       this.autoGuessCounter = 0;
       this.interval = {};
+      this.wordbankLetter = wordbankLetter;
     }
     updateGameState() {
       console.log("Check for win");
@@ -145,6 +165,7 @@
       }
       if (this.state === gameState_default.IN_PLAY) {
         this.guesses[guessId].changeState(guessState_default.GUESSED);
+        this.guesses[guessId].updateStyle();
         for (let t = 0; t < this.tiles.length; t++) {
           for (let l = 0; l < this.tiles[t].length; l++) {
             if (this.tiles[t][l].letter === this.guesses[guessId].letter) {
@@ -156,49 +177,55 @@
         this.updateGameState();
       }
     }
-    logBoard() {
-      let aRow = "";
-      for (let r = 0; r < this.tiles.length; r++) {
-        aRow += "===";
-        for (let c = 0; c < this.tiles[r].length; c++) {
-          switch (this.tiles[r][c].state) {
-            case tileState_default.GUESSABLE:
-              aRow += "[-]";
-              break;
-            case tileState_default.GUESSED:
-              aRow += "[" + this.tiles[r][c].letter + "]";
-              break;
-            default:
-              aRow += "[X]";
-          }
+    /*
+        logBoard(){
+            let aRow = "";
+            for(let r=0; r<this.tiles.length; r++){
+                aRow += "===";
+                for(let c=0; c<this.tiles[r].length; c++){
+                    switch (this.tiles[r][c].state){
+                        case TileState.GUESSABLE:
+                            aRow += "[-]";
+                            break;
+                        case TileState.GUESSED:
+                            aRow += "[" + this.tiles[r][c].letter + "]";
+                            break;
+                        default:
+                            aRow +="[X]";
+                    }
+                }
+                aRow +="===\n";
+            }
+            console.log(aRow);
+            console.log("Guesses:");
+            let aGuess="";
+            for(let g=0; g<this.guesses.length; g++){
+                switch (this.guesses[g].state){
+                    case GuessState.FRESH:
+                        aGuess += "["+this.guesses[g].letter+"]";
+                        break;
+                    default:
+                        aGuess += "X"+this.guesses[g].letter+"X";
+                }
+            }
+            console.log(aGuess);
         }
-        aRow += "===\n";
-      }
-      console.log(aRow);
-      console.log("Guesses:");
-      let aGuess = "";
-      for (let g = 0; g < this.guesses.length; g++) {
-        switch (this.guesses[g].state) {
-          case guessState_default.FRESH:
-            aGuess += "[" + this.guesses[g].letter + "]";
-            break;
-          default:
-            aGuess += "X" + this.guesses[g].letter + "X";
-        }
-      }
-      console.log(aGuess);
-    }
+        */
     autoGuess(t) {
+      console.log("what is t? ", t);
       console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+      let guessedLetterPass = t.guesses[t.autoGuessCounter].letter;
+      console.log("Guessed Letter is ", t.guesses[t.autoGuessCounter].letter);
       if (t.autoGuessCounter < t.guesses.length) {
         t.makeGuess(t.autoGuessCounter);
         t.autoGuessCounter++;
+        return guessedLetterPass;
       } else {
         t.stopAutoGuesser();
       }
     }
     autoGuesser() {
-      this.interval = setInterval(this.autoGuess, 1e3, this);
+      this.interval = setInterval(this.autoGuess, 1500, this);
     }
     stopAutoGuesser() {
       clearInterval(this.interval);
@@ -354,6 +381,7 @@
   };
   var displayAlphabet = () => {
     let symbols = alphabet();
+    console.log("symbols are ", symbols);
     const container = document.createElement("div");
     container.className = "alphabet-container hidden";
     const firstHalf = symbols.slice(0, 13);
@@ -362,6 +390,7 @@
     firstRow.classList.add("alphabet-row");
     firstHalf.forEach((letter) => {
       const div = document.createElement("div");
+      div.className = "letter";
       div.textContent = letter;
       firstRow.appendChild(div);
     });
