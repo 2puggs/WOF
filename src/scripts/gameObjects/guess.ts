@@ -12,6 +12,8 @@ export default class Guess {
         this.state = state;
         this.html = document.createElement("div")
         this.html.textContent = this.letter;
+        this.html.dataset.guess = id === null ? "blank" : id.toString();
+    
     }
     changeState(updateState){
         this.state = updateState;
