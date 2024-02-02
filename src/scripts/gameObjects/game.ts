@@ -54,7 +54,9 @@ export default class Game {
             this.state = GameState.IN_PLAY;
         }
         if(this.state === GameState.IN_PLAY){
-            this.guesses[guessId].changeState(GuessState.GUESSED);
+            if( this.guesses[guessId].state !== GuessState.UNUSED){
+                this.guesses[guessId].changeState(GuessState.GUESSED);
+            }
             for(let t=0; t<this.tiles.length; t++) {
                 for (let l = 0; l < this.tiles[t].length; l++) {
                     if (this.tiles[t][l].letter === this.guesses[guessId].letter) {

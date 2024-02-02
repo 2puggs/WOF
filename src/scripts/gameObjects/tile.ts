@@ -45,7 +45,5 @@ export default class Tile {
                 console.log("unknown tile state");
         }
         this.html.className = style;
-
-        // then make a version of this that updates the guess style
     }
 }

@@ -73,11 +73,20 @@
   font-weight: 200;
   font-size: 24px;
 }
-.alphabet-row > div {
+.alphabet-row > .guess {
   padding: 5px;
   margin: 5px;
   flex-grow: 1;
   text-align: center;
+}
+.alphabet-row > .guess.fresh {
+  border: 1px solid red;
+}
+.alphabet-row > .guess.guessed {
+  border: 1px solid blue;
+}
+.alphabet-row > .guess.unused {
+  border: 1px solid green;
 }
 .tile {
   align-self: flex-start;

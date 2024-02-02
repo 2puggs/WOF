@@ -86,13 +86,23 @@ $hover-color:  rgb(177, 221, 136);
   font-size: 24px;
 }
 
-.alphabet-row > div {
+.alphabet-row > .guess {
   padding: 5px;
   margin: 5px;
   flex-grow: 1;
   text-align: center;
 
-  // I think this div would now have add corresponding class states
+  &.fresh{
+    border: 1px solid red;
+  }
+  &.guessed{
+    border: 1px solid blue;
+  }
+
+  &.unused{
+    border: 1px solid green;
+  }
+
 }
 
 .tile {

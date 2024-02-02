@@ -68,30 +68,51 @@
     }
   };
 
+  // src/scripts/gameObjects/states/guessState.ts
+  var GuessState = /* @__PURE__ */ ((GuessState2) => {
+    GuessState2[GuessState2["FRESH"] = 1] = "FRESH";
+    GuessState2[GuessState2["GUESSED"] = 2] = "GUESSED";
+    GuessState2[GuessState2["UNUSED"] = 3] = "UNUSED";
+    return GuessState2;
+  })(GuessState || {});
+  var guessState_default = GuessState;
+
   // src/scripts/gameObjects/guess.ts
   var Guess = class {
     constructor(id, letter, state) {
       __publicField(this, "id");
       __publicField(this, "letter");
       __publicField(this, "state");
+      __publicField(this, "html");
       this.id = id;
       this.letter = letter;
       this.state = state;
+      this.html = document.createElement("div");
+      this.html.dataset.guess = id === null ? "blank" : id.toString();
+      this.html.textContent = this.letter;
     }
     changeState(updateState) {
       this.state = updateState;
+      this.updateStyle();
+    }
+    updateStyle() {
+      let style = "guess";
       switch (this.state) {
+        case guessState_default.FRESH:
+          style += " fresh";
+          break;
+        case guessState_default.GUESSED:
+          style += " guessed";
+          break;
+        case guessState_default.UNUSED:
+          style += " fresh";
+          break;
+        default:
+          console.log("unknown tile state");
       }
+      this.html.className = style;
     }
   };
-
-  // src/scripts/gameObjects/states/guessState.ts
-  var GuessState = /* @__PURE__ */ ((GuessState2) => {
-    GuessState2[GuessState2["FRESH"] = 1] = "FRESH";
-    GuessState2[GuessState2["GUESSED"] = 2] = "GUESSED";
-    return GuessState2;
-  })(GuessState || {});
-  var guessState_default = GuessState;
 
   // src/scripts/gameObjects/states/gameState.ts
   var GameState = /* @__PURE__ */ ((GameState2) => {
@@ -151,7 +172,9 @@
         this.state = gameState_default.IN_PLAY;
       }
       if (this.state === gameState_default.IN_PLAY) {
-        this.guesses[guessId].changeState(guessState_default.GUESSED);
+        if (this.guesses[guessId].state !== guessState_default.UNUSED) {
+          this.guesses[guessId].changeState(guessState_default.GUESSED);
+        }
         for (let t = 0; t < this.tiles.length; t++) {
           for (let l = 0; l < this.tiles[t].length; l++) {
             if (this.tiles[t][l].letter === this.guesses[guessId].letter) {
@@ -213,6 +236,7 @@
   };
 
   // src/scripts/wof.ts
+  var game;
   var initializeAllGuesses = () => {
     const guesses = [];
     const alphabetList = alphabet();
@@ -252,7 +276,35 @@
       guesses.push(aGuess);
     }
     guesses = shuffle(guesses);
+    guesses = padGuesses(guesses);
     return guesses;
+  };
+  var padGuesses = (guesses) => {
+    const padded = [];
+    const alphabetList = alphabet();
+    const alpha = document.getElementById("alpha");
+    const firstRow = document.createElement("div");
+    firstRow.classList.add("alphabet-row");
+    const secondRow = document.createElement("div");
+    secondRow.classList.add("alphabet-row");
+    alpha.className = "alphabet-container hidden";
+    let find;
+    for (let a = 0; a < alphabetList.length; a++) {
+      find = guesses.find((f) => f.letter === alphabetList[a]);
+      if (!find) {
+        find = new Guess(null, alphabetList[a], guessState_default.UNUSED);
+      }
+      find.updateStyle();
+      padded.push(find);
+      if (a < 13) {
+        firstRow.appendChild(find.html);
+      } else {
+        secondRow.appendChild(find.html);
+      }
+      alpha.appendChild(firstRow);
+      alpha.appendChild(secondRow);
+    }
+    return padded;
   };
   var alignMe = (totalColumns, columnsToCenter) => {
     let pad = totalColumns / 2 - columnsToCenter / 2;
@@ -333,10 +385,8 @@
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
   document.addEventListener("DOMContentLoaded", (event) => {
-    let game = buildGame("Large Language Models", true, 200);
-    game.autoGuesser();
+    game = buildGame("Large Language Models", true, 200);
     bttnStart();
-    displayAlphabet();
   });
   var bttnStart = () => {
     const intro = document.createElement("div");
@@ -350,38 +400,13 @@
     newInp.className = "btn-start";
     newInp.textContent = "START";
     startContainer.appendChild(newInp);
-    const alpha = document.getElementsByClassName("alphabet-container hidden");
     startContainer.addEventListener("click", () => {
       intro.classList.add("hidden");
       const mainContainer = document.getElementsByClassName("container hidden")[0];
       mainContainer.classList.remove("hidden");
-      const alpha2 = document.getElementsByClassName("alphabet-container hidden")[0];
-      alpha2.classList.remove("hidden");
+      const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
+      alpha.classList.remove("hidden");
     });
-  };
-  var displayAlphabet = () => {
-    let symbols = alphabet();
-    const container = document.createElement("div");
-    container.className = "alphabet-container hidden";
-    const firstHalf = symbols.slice(0, 13);
-    const secondHalf = symbols.slice(13);
-    const firstRow = document.createElement("div");
-    firstRow.classList.add("alphabet-row");
-    firstHalf.forEach((letter) => {
-      const div = document.createElement("div");
-      div.textContent = letter;
-      firstRow.appendChild(div);
-    });
-    const secondRow = document.createElement("div");
-    secondRow.classList.add("alphabet-row");
-    secondHalf.forEach((letter) => {
-      const div = document.createElement("div");
-      div.textContent = letter;
-      secondRow.appendChild(div);
-    });
-    console.log(firstRow);
-    container.appendChild(firstRow);
-    container.appendChild(secondRow);
-    document.body.appendChild(container);
+    game.autoGuesser();
   };
 })();
