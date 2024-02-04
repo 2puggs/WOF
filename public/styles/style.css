@@ -10,6 +10,7 @@
 #board {
   display: flex;
   flex-direction: column;
+  margin-left: 750px;
   margin-top: 10px;
   height: 90%;
   width: 100%;
@@ -64,7 +65,6 @@
   border: 2px solid black;
   border-radius: 1.5px;
   box-shadow: 0px 4px 8px 0px rgba(5, 50, 66, 0.16);
-  margin: 0 auto;
   max-width: 1000px;
   background-color: rgb(246, 250, 252);
 }
@@ -80,10 +80,11 @@
   text-align: center;
 }
 .alphabet-row > .guess.fresh {
-  border: 1px solid red;
+  height: 20px;
+  width: 20px;
 }
 .alphabet-row > .guess.guessed {
-  border: 1px solid blue;
+  display: none;
 }
 .alphabet-row > .guess.unused {
   border: 1px solid green;
