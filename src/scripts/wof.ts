@@ -29,6 +29,7 @@ const findUnique = (str) => {
 }
 
 const shuffle = (array: Array<any>) => {
+    console.log("array is: ", array);
     let currentIndex: number = array.length;
     let temporaryValue: any, randomIndex: number;
     while (0 !== currentIndex) {
@@ -38,6 +39,8 @@ const shuffle = (array: Array<any>) => {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
+    console.log("inside of shuffle");
+    console.log(array);
     return array;
 }
 
@@ -172,12 +175,58 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
 document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame("Large Language Models", true, 200);
-
+    game = buildGame("Large Language Models", true, 200); // round 1 
+    //phrase = ["Prompt Engineering", "Data Leaking"]; //playing round 2 & 3 
     bttnStart();
-    // displayAlphabet();
+
+    document.querySelector('.btn-start').addEventListener('click', function() {
+        roundStart(); //event listener to keep the game pauded 
+        nextRound(); //get the next round
+    });
 });
-//
+
+
+const nextRound = () => {
+    let phrase = ["Prompt Engineering", "Data Leaking"]; // playing round 2 & 3 
+    const nxtround = document.createElement('button');
+    nxtround.type = "button";
+    nxtround.className = "next";
+    nxtround.textContent = "NEXT ROUND";
+    const getGameButtons = document.querySelector('.game-buttons');
+    getGameButtons.appendChild(nxtround);
+
+    const getNext = document.querySelector('.next'); //get the next button
+    getNext.addEventListener('click', () => {
+        prompt("next button pushed"); //start the game
+        for (let round =0 ; round < phrase.length; round++ ) {
+            game = buildGame(phrase[round], true, 200);
+        } //end for 
+    }); //end eventListner
+};
+
+const roundStart = () => {
+    const gameButtons = document.createElement('div');
+    gameButtons.className = 'game-buttons';
+    const getContainer = document.querySelector('#board');
+    getContainer.appendChild(gameButtons);
+    const getGameButtons = document.querySelector('.game-buttons');
+    
+    //create the button to go into the div 
+    const round = document.createElement('button');
+    round.type = "button";
+    round.className = "round-start";
+    round.textContent = "START ROUND";
+    
+    getGameButtons.append(round);
+
+    const getStarted = document.querySelector('.round-start');
+    //put the start button into the game button container 
+    getStarted.addEventListener('click', () => {
+        game.autoGuesser(); //start the game
+    }); //end eventListner
+};
+//bttn start is the main starting page 
+
 const bttnStart = () => { //do i need to separate into classes since i'm creating div, start button, and switching screens?
     //append introScreen
     const intro = document.createElement('div');
@@ -200,7 +249,6 @@ const bttnStart = () => { //do i need to separate into classes since i'm creatin
         const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
         alpha.classList.remove('hidden');
     });
-    game.autoGuesser();
 };
 
 // const displayAlphabet = () => {

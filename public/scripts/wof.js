@@ -212,6 +212,7 @@
       console.log(aGuess);
     }
     autoGuess(t) {
+      console.log("what is t? ", t);
       console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
       if (t.autoGuessCounter < t.guesses.length) {
         t.makeGuess(t.autoGuessCounter);
@@ -249,6 +250,7 @@
     return uniq;
   };
   var shuffle = (array) => {
+    console.log("array is: ", array);
     let currentIndex = array.length;
     let temporaryValue, randomIndex;
     while (0 !== currentIndex) {
@@ -258,6 +260,8 @@
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
+    console.log("inside of shuffle");
+    console.log(array);
     return array;
   };
   var initializeLetterFromPhraseGuesses = (phrase) => {
@@ -380,7 +384,43 @@
   document.addEventListener("DOMContentLoaded", (event) => {
     game = buildGame("Large Language Models", true, 200);
     bttnStart();
+    document.querySelector(".btn-start").addEventListener("click", function() {
+      roundStart();
+      nextRound();
+    });
   });
+  var nextRound = () => {
+    let phrase = ["Prompt Engineering", "Data Leaking"];
+    const nxtround = document.createElement("button");
+    nxtround.type = "button";
+    nxtround.className = "next";
+    nxtround.textContent = "NEXT ROUND";
+    const getGameButtons = document.querySelector(".game-buttons");
+    getGameButtons.appendChild(nxtround);
+    const getNext = document.querySelector(".next");
+    getNext.addEventListener("click", () => {
+      prompt("next button pushed");
+      for (let round = 0; round < phrase.length; round++) {
+        game = buildGame(phrase[round], true, 200);
+      }
+    });
+  };
+  var roundStart = () => {
+    const gameButtons = document.createElement("div");
+    gameButtons.className = "game-buttons";
+    const getContainer = document.querySelector("#board");
+    getContainer.appendChild(gameButtons);
+    const getGameButtons = document.querySelector(".game-buttons");
+    const round = document.createElement("button");
+    round.type = "button";
+    round.className = "round-start";
+    round.textContent = "START ROUND";
+    getGameButtons.append(round);
+    const getStarted = document.querySelector(".round-start");
+    getStarted.addEventListener("click", () => {
+      game.autoGuesser();
+    });
+  };
   var bttnStart = () => {
     const intro = document.createElement("div");
     intro.className = "introScreen ";
@@ -400,6 +440,5 @@
       const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
       alpha.classList.remove("hidden");
     });
-    game.autoGuesser();
   };
 })();

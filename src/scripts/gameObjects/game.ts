@@ -103,6 +103,7 @@ export default class Game {
         console.log(aGuess);
     }
     autoGuess(t: this){
+        console.log("what is t? ", t);
         console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
         if(t.autoGuessCounter < t.guesses.length){
             t.makeGuess(t.autoGuessCounter)
