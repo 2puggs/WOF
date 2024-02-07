@@ -390,45 +390,16 @@
   };
   document.addEventListener("DOMContentLoaded", (event) => {
     game = buildGame("Large Language Models", true, 200);
-    bttnStart();
+    const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
+    alpha.classList.remove("hidden");
+    introScreen();
     document.querySelector(".btn-start").addEventListener("click", function() {
-      roundStart();
+      startbttn();
       nextRound();
+      resetRound();
     });
   });
-  var nextRound = () => {
-    let phrase = ["Prompt Engineering", "Data Leaking"];
-    const nxtround = document.createElement("button");
-    nxtround.type = "button";
-    nxtround.className = "next";
-    nxtround.textContent = "NEXT ROUND";
-    const getGameButtons = document.querySelector(".game-buttons");
-    getGameButtons.appendChild(nxtround);
-    const getNext = document.querySelector(".next");
-    getNext.addEventListener("click", () => {
-      prompt("next button pushed");
-      for (let round = 0; round < phrase.length; round++) {
-        game = buildGame(phrase[round], true, 200);
-      }
-    });
-  };
-  var roundStart = () => {
-    const gameButtons = document.createElement("div");
-    gameButtons.className = "game-buttons";
-    const getContainer = document.querySelector("#board");
-    getContainer.appendChild(gameButtons);
-    const getGameButtons = document.querySelector(".game-buttons");
-    const round = document.createElement("button");
-    round.type = "button";
-    round.className = "round-start";
-    round.textContent = "START ROUND";
-    getGameButtons.append(round);
-    const getStarted = document.querySelector(".round-start");
-    getStarted.addEventListener("click", () => {
-      game.autoGuesser();
-    });
-  };
-  var bttnStart = () => {
+  var introScreen = () => {
     const intro = document.createElement("div");
     intro.className = "introScreen ";
     document.body.appendChild(intro);
@@ -444,8 +415,49 @@
       intro.classList.add("hidden");
       const mainContainer = document.getElementsByClassName("container hidden")[0];
       mainContainer.classList.remove("hidden");
+    });
+  };
+  var resetRound = () => {
+    let phrase = ["Prompt Engineering", "Data Leaking"];
+    const getNext = document.querySelector(".next");
+    getNext.addEventListener("click", () => {
+      prompt("next button pushed");
+      let round = 0;
+      while (round < phrase.length) {
+        const getRows = document.getElementById("board");
+        while (getRows.hasChildNodes()) {
+          getRows.removeChild(getRows.firstChild);
+        }
+        startbttn();
+        nextRound();
+        game = buildGame(phrase[round], true, 200);
+        round++;
+      }
       const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
       alpha.classList.remove("hidden");
     });
+  };
+  var startbttn = () => {
+    const gameButtons = document.createElement("div");
+    gameButtons.className = "game-buttons";
+    const getContainer = document.querySelector("#board");
+    getContainer.appendChild(gameButtons);
+    const getGameButton = document.querySelector(".game-buttons");
+    const round = document.createElement("button");
+    round.type = "button";
+    round.className = "round-start";
+    round.textContent = "START ROUND";
+    getGameButton.append(round);
+    round.addEventListener("click", () => {
+      game.autoGuesser();
+    });
+  };
+  var nextRound = () => {
+    const nxtround = document.createElement("button");
+    nxtround.type = "button";
+    nxtround.className = "next";
+    nxtround.textContent = "NEXT ROUND";
+    const getGameButtons = document.querySelector(".game-buttons");
+    getGameButtons.appendChild(nxtround);
   };
 })();

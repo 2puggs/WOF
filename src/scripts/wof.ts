@@ -54,7 +54,7 @@ const initializeLetterFromPhraseGuesses = (phrase) => {
         guesses.push(aGuess);
     }
     guesses = shuffle(guesses);
-    guesses = padGuesses(guesses)
+    guesses = padGuesses(guesses);
     return guesses;
 }
 
@@ -85,7 +85,6 @@ const padGuesses = (guesses: Guess[]):Guess[] =>{
         alpha.appendChild(firstRow);
         alpha.appendChild(secondRow);
     }
-
 
     return padded;
 }
@@ -174,61 +173,22 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
-document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame("Large Language Models", true, 200); // round 1 
-    //phrase = ["Prompt Engineering", "Data Leaking"]; //playing round 2 & 3 
-    bttnStart();
 
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    game = buildGame("Large Language Models", true, 200); // playing the first round
+    const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+    alpha.classList.remove('hidden');
+    //phrase = ["Prompt Engineering", "Data Leaking"]; //playing round 2 & 3 
+    introScreen(); //1st is intro screen 
     document.querySelector('.btn-start').addEventListener('click', function() {
-        roundStart(); //event listener to keep the game pauded 
-        nextRound(); //get the next round
+        //roundStart(); //load the start button
+        startbttn(); //load start round button
+        nextRound(); //load the next round button
+        resetRound();
     });
 });
-
-
-const nextRound = () => {
-    let phrase = ["Prompt Engineering", "Data Leaking"]; // playing round 2 & 3 
-    const nxtround = document.createElement('button');
-    nxtround.type = "button";
-    nxtround.className = "next";
-    nxtround.textContent = "NEXT ROUND";
-    const getGameButtons = document.querySelector('.game-buttons');
-    getGameButtons.appendChild(nxtround);
-
-    const getNext = document.querySelector('.next'); //get the next button
-    getNext.addEventListener('click', () => {
-        prompt("next button pushed"); //start the game
-        for (let round =0 ; round < phrase.length; round++ ) {
-            game = buildGame(phrase[round], true, 200);
-        } //end for 
-    }); //end eventListner
-};
-
-const roundStart = () => {
-    const gameButtons = document.createElement('div');
-    gameButtons.className = 'game-buttons';
-    const getContainer = document.querySelector('#board');
-    getContainer.appendChild(gameButtons);
-    const getGameButtons = document.querySelector('.game-buttons');
-    
-    //create the button to go into the div 
-    const round = document.createElement('button');
-    round.type = "button";
-    round.className = "round-start";
-    round.textContent = "START ROUND";
-    
-    getGameButtons.append(round);
-
-    const getStarted = document.querySelector('.round-start');
-    //put the start button into the game button container 
-    getStarted.addEventListener('click', () => {
-        game.autoGuesser(); //start the game
-    }); //end eventListner
-};
-//bttn start is the main starting page 
-
-const bttnStart = () => { //do i need to separate into classes since i'm creating div, start button, and switching screens?
-    //append introScreen
+const introScreen = () => { //start the whole game with the intro screen
     const intro = document.createElement('div');
     intro.className = 'introScreen ';
     document.body.appendChild(intro);
@@ -246,11 +206,78 @@ const bttnStart = () => { //do i need to separate into classes since i'm creatin
         intro.classList.add('hidden');
         const mainContainer = document.getElementsByClassName('container hidden')[0];
         mainContainer.classList.remove('hidden');
-        const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
-        alpha.classList.remove('hidden');
+    //
     });
 };
 
+/*const roundStart = () => { //starting the auto guessing 
+    const getStarted = document.querySelector('.round-start');
+    //put the start button into the game button container 
+    getStarted.addEventListener('click', () => {
+        game.autoGuesser(); //start the game
+    }); //end eventListner
+}; */
+
+//function for resetting and reloading next prompt 
+const resetRound = () => {
+    let phrase = ["Prompt Engineering", "Data Leaking"]; // playing round 2 & 3
+    const getNext = document.querySelector('.next'); //get the next button
+    //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+    //console.log("inside resetRound this is alpha", alpha);
+    //alpha.classList.remove('hidden');
+    getNext.addEventListener('click', () => {
+        prompt("next button pushed"); //start the game
+        let round = 0; 
+        while (round < phrase.length) { //kill the previous round screen & reset 
+            const getRows = document.getElementById("board"); 
+            while (getRows.hasChildNodes()) { //remove old board
+               getRows.removeChild(getRows.firstChild);
+               
+            }//reset the round and build the next round
+            //trigger the buttons to come back
+            startbttn(); //build the start button again
+            nextRound(); // build next round button again
+            // add the alphabet back 
+            game = buildGame(phrase[round], true, 200);
+            //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+            //alpha.classList.remove('hidden');
+            //when i have alphabet here, then theres a double alphabet container.
+            //roundStart(); //if next round clicked then need to call this resetfunction 
+    
+            round ++;
+        }
+        const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+        alpha.classList.remove('hidden');
+    }); //end eventListner
+}
+const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
+    const gameButtons = document.createElement('div');
+    gameButtons.className = 'game-buttons';
+    const getContainer = document.querySelector('#board');
+    getContainer.appendChild(gameButtons);
+    const getGameButton = document.querySelector('.game-buttons'); //add this back in if you separate making the two different buttons
+    
+    //create the button to go into the div 
+    const round = document.createElement('button');
+    round.type = "button";
+    round.className = "round-start";
+    round.textContent = "START ROUND";
+    getGameButton.append(round);
+
+    
+    round.addEventListener('click', () => {
+        game.autoGuesser(); //start the game
+    }); //end eventListner
+}
+const nextRound = () => { //build the next round button 
+    const nxtround = document.createElement('button');
+    nxtround.type = "button";
+    nxtround.className = "next";
+    nxtround.textContent = "NEXT ROUND";
+    const getGameButtons = document.querySelector('.game-buttons');
+    getGameButtons.appendChild(nxtround);
+
+};
 // const displayAlphabet = () => {
 //     let symbols = alphabet();
 //     const container = document.createElement('div');
