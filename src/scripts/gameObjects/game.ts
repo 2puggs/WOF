@@ -105,6 +105,7 @@ export default class Game {
     autoGuess(t: this){
         console.log("what is t? ", t);
         console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+        console.log("t guess" , t.guesses); 
         if(t.autoGuessCounter < t.guesses.length){
             t.makeGuess(t.autoGuessCounter)
             t.autoGuessCounter++;

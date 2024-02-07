@@ -63,6 +63,9 @@ const padGuesses = (guesses: Guess[]):Guess[] =>{
     const padded: Guess []= [];
     const alphabetList = alphabet();
     const alpha = document.getElementById("alpha");
+    const wrap = document.createElement('div');
+    wrap.setAttribute("id", "alphawrap");
+
     const firstRow = document.createElement('div');
     firstRow.classList.add('alphabet-row');
     const secondRow = document.createElement('div');
@@ -82,10 +85,10 @@ const padGuesses = (guesses: Guess[]):Guess[] =>{
         }else{
             secondRow.appendChild(find.html)
         }
-        alpha.appendChild(firstRow);
-        alpha.appendChild(secondRow);
+        wrap.appendChild(firstRow);
+        wrap.appendChild(secondRow);
     }
-
+    alpha?.appendChild(wrap);
     return padded;
 }
 
@@ -132,6 +135,9 @@ const makeTiles = (words: string[]) => {
     let id = 0;
     const tiles = [];
     const boardElement = document.getElementById("board");
+    console.log(boardElement);
+    const boardWrap = document.createElement("div");
+    boardWrap.setAttribute("id", "boardWrap");
     for (let w = 0; w < words.length; w++) {
         let aDiv = document.createElement("div");
         aDiv.className = "tile-row";
@@ -148,8 +154,9 @@ const makeTiles = (words: string[]) => {
             aDiv.appendChild(aTile.html);
             id++;
         }
-        boardElement.appendChild(aDiv);
+        boardWrap.appendChild(aDiv);
     }
+    boardElement?.appendChild(boardWrap);
     return tiles;
 }
 
@@ -174,9 +181,10 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     return new Game(GameState.FRESH, tiles, guesses, allowedTries);
 }
 
-
+const phrase = ["zebra","Prompt Engineering", "Data Leaking"]; 
+let round = 0;
 document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame("Large Language Models", true, 200); // playing the first round
+    game = buildGame(phrase[round], true, 200); // playing the first round
     const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     alpha.classList.remove('hidden');
     //phrase = ["Prompt Engineering", "Data Leaking"]; //playing round 2 & 3 
@@ -220,40 +228,53 @@ const introScreen = () => { //start the whole game with the intro screen
 
 //function for resetting and reloading next prompt 
 const resetRound = () => {
-    let phrase = ["Prompt Engineering", "Data Leaking"]; // playing round 2 & 3
+    // playing round 2 & 3
     const getNext = document.querySelector('.next'); //get the next button
     //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     //console.log("inside resetRound this is alpha", alpha);
     //alpha.classList.remove('hidden');
-    getNext.addEventListener('click', () => {
-        prompt("next button pushed"); //start the game
-        let round = 0; 
-        while (round < phrase.length) { //kill the previous round screen & reset 
-            const getRows = document.getElementById("board"); 
-            while (getRows.hasChildNodes()) { //remove old board
-               getRows.removeChild(getRows.firstChild);
-               
-            }//reset the round and build the next round
+    getNext?.addEventListener('click', () => {
+        if (round < phrase.length - 1) { // noted 
+            prompt("next button pushed"); //start the game
+        const getBoardWrap:any = document.getElementById("boardWrap"); 
+        const getAlpha:any = document.getElementById("alphawrap");
+        while (getBoardWrap?.hasChildNodes()) { //remove old board
+             getBoardWrap.removeChild(getBoardWrap.firstChild);
+        }//reset the round and build the next round
             //trigger the buttons to come back
-            startbttn(); //build the start button again
-            nextRound(); // build next round button again
+        while (getAlpha?.hasChildNodes()) { //remove old board
+            getAlpha.removeChild(getAlpha.firstChild);
+        }
+        while (getAlpha?.hasChildNodes()) { //remove old board
+            getAlpha.removeChild(getAlpha.firstChild);
+        }
+        document.getElementById("boardWrap")?.remove();
+        document.getElementById("alphawrap")?.remove();
+            //same way to delete the start bttn and next round button 
+           // startbttn(); //build the start button again
+           // nextRound(); // build next round button again
             // add the alphabet back 
-            game = buildGame(phrase[round], true, 200);
+        
+        round ++;
+        console.log(round, " check round");
+        game = buildGame(phrase[round], true, 200);
             //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
             //alpha.classList.remove('hidden');
             //when i have alphabet here, then theres a double alphabet container.
             //roundStart(); //if next round clicked then need to call this resetfunction 
-    
-            round ++;
-        }
         const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
         alpha.classList.remove('hidden');
+        }
+        else {
+            prompt("go to end screen")
+        }
+        
     }); //end eventListner
 }
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
     gameButtons.className = 'game-buttons';
-    const getContainer = document.querySelector('#board');
+    const getContainer = document.querySelector('#controls');
     getContainer.appendChild(gameButtons);
     const getGameButton = document.querySelector('.game-buttons'); //add this back in if you separate making the two different buttons
     

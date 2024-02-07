@@ -214,6 +214,7 @@
     autoGuess(t) {
       console.log("what is t? ", t);
       console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+      console.log("t guess", t.guesses);
       if (t.autoGuessCounter < t.guesses.length) {
         t.makeGuess(t.autoGuessCounter);
         t.autoGuessCounter++;
@@ -264,9 +265,9 @@
     console.log(array);
     return array;
   };
-  var initializeLetterFromPhraseGuesses = (phrase) => {
-    phrase = phrase.toUpperCase();
-    const unique = findUnique(phrase);
+  var initializeLetterFromPhraseGuesses = (phrase2) => {
+    phrase2 = phrase2.toUpperCase();
+    const unique = findUnique(phrase2);
     let guesses = [];
     for (let u = 0; u < unique.length; u++) {
       let aGuess = new Guess(u, unique[u], guessState_default.FRESH);
@@ -280,6 +281,8 @@
     const padded = [];
     const alphabetList = alphabet();
     const alpha = document.getElementById("alpha");
+    const wrap = document.createElement("div");
+    wrap.setAttribute("id", "alphawrap");
     const firstRow = document.createElement("div");
     firstRow.classList.add("alphabet-row");
     const secondRow = document.createElement("div");
@@ -298,9 +301,10 @@
       } else {
         secondRow.appendChild(find.html);
       }
-      alpha.appendChild(firstRow);
-      alpha.appendChild(secondRow);
+      wrap.appendChild(firstRow);
+      wrap.appendChild(secondRow);
     }
+    alpha?.appendChild(wrap);
     return padded;
   };
   var alignMe = (totalColumns, columnsToCenter) => {
@@ -342,6 +346,9 @@
     let id = 0;
     const tiles = [];
     const boardElement = document.getElementById("board");
+    console.log(boardElement);
+    const boardWrap = document.createElement("div");
+    boardWrap.setAttribute("id", "boardWrap");
     for (let w = 0; w < words.length; w++) {
       let aDiv = document.createElement("div");
       aDiv.className = "tile-row";
@@ -358,16 +365,17 @@
         aDiv.appendChild(aTile.html);
         id++;
       }
-      boardElement.appendChild(aDiv);
+      boardWrap.appendChild(aDiv);
     }
+    boardElement?.appendChild(boardWrap);
     return tiles;
   };
   var alphabet = () => {
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     return alpha.map((x) => String.fromCharCode(x));
   };
-  var buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
-    let words = phrase.toUpperCase().split(" ");
+  var buildGame = (phrase2, onlyPhraseLetters, allowedTries) => {
+    let words = phrase2.toUpperCase().split(" ");
     let longest_word_length = 0;
     let longest_word = "";
     words.reduce((accumulator, currentValue) => {
@@ -378,11 +386,13 @@
     }, longest_word);
     words = padWords(words, longest_word_length + 2);
     let tiles = makeTiles(words);
-    const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
+    const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase2) : initializeAllGuesses();
     return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
   };
+  var phrase = ["zebra", "Prompt Engineering", "Data Leaking"];
+  var round = 0;
   document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame("Large Language Models", true, 200);
+    game = buildGame(phrase[round], true, 200);
     const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
     alpha.classList.remove("hidden");
     introScreen();
@@ -411,37 +421,45 @@
     });
   };
   var resetRound = () => {
-    let phrase = ["Prompt Engineering", "Data Leaking"];
     const getNext = document.querySelector(".next");
-    getNext.addEventListener("click", () => {
-      prompt("next button pushed");
-      let round = 0;
-      while (round < phrase.length) {
-        const getRows = document.getElementById("board");
-        while (getRows.hasChildNodes()) {
-          getRows.removeChild(getRows.firstChild);
+    getNext?.addEventListener("click", () => {
+      if (round < phrase.length - 1) {
+        prompt("next button pushed");
+        const getBoardWrap = document.getElementById("boardWrap");
+        const getAlpha = document.getElementById("alphawrap");
+        while (getBoardWrap?.hasChildNodes()) {
+          getBoardWrap.removeChild(getBoardWrap.firstChild);
         }
-        startbttn();
-        nextRound();
-        game = buildGame(phrase[round], true, 200);
+        while (getAlpha?.hasChildNodes()) {
+          getAlpha.removeChild(getAlpha.firstChild);
+        }
+        while (getAlpha?.hasChildNodes()) {
+          getAlpha.removeChild(getAlpha.firstChild);
+        }
+        document.getElementById("boardWrap")?.remove();
+        document.getElementById("alphawrap")?.remove();
         round++;
+        console.log(round, " check round");
+        game = buildGame(phrase[round], true, 200);
+        const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
+        alpha.classList.remove("hidden");
+      } else {
+        prompt("go to end screen");
       }
-      const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
-      alpha.classList.remove("hidden");
     });
   };
   var startbttn = () => {
     const gameButtons = document.createElement("div");
     gameButtons.className = "game-buttons";
-    const getContainer = document.querySelector("#board");
+    const getContainer = document.querySelector("#controls");
     getContainer.appendChild(gameButtons);
     const getGameButton = document.querySelector(".game-buttons");
-    const round = document.createElement("button");
-    round.type = "button";
-    round.className = "round-start";
-    round.textContent = "START ROUND";
-    getGameButton.append(round);
-    round.addEventListener("click", () => {
+    const round2 = document.createElement("button");
+    round2.type = "button";
+    round2.className = "round-start";
+    round2.textContent = "START ROUND";
+    getGameButton.append(round2);
+    round2.addEventListener("click", () => {
       game.autoGuesser();
     });
   };
