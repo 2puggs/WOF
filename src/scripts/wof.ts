@@ -29,7 +29,6 @@ const findUnique = (str) => {
 }
 
 const shuffle = (array: Array<any>) => {
-    console.log("array is: ", array);
     let currentIndex: number = array.length;
     let temporaryValue: any, randomIndex: number;
     while (0 !== currentIndex) {
@@ -39,8 +38,6 @@ const shuffle = (array: Array<any>) => {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-    console.log("inside of shuffle");
-    console.log(array);
     return array;
 }
 
@@ -49,13 +46,14 @@ const initializeLetterFromPhraseGuesses = (phrase) => {
     phrase = phrase.toUpperCase();
     const unique = findUnique(phrase);
     let guesses = [];
+    let paddedGuesses = [];
     for (let u = 0; u < unique.length; u++) {
         let aGuess = new Guess(u, unique[u], GuessState.FRESH);
         guesses.push(aGuess);
     }
     guesses = shuffle(guesses);
-    guesses = padGuesses(guesses);
-    return guesses;
+    paddedGuesses = padGuesses(guesses);
+    return [guesses, paddedGuesses];
 }
 
 
@@ -65,7 +63,6 @@ const padGuesses = (guesses: Guess[]):Guess[] =>{
     const alpha = document.getElementById("alpha");
     const wrap = document.createElement('div');
     wrap.setAttribute("id", "alphawrap");
-
     const firstRow = document.createElement('div');
     firstRow.classList.add('alphabet-row');
     const secondRow = document.createElement('div');
@@ -73,7 +70,6 @@ const padGuesses = (guesses: Guess[]):Guess[] =>{
     alpha.className = 'alphabet-container hidden';
     let find: Guess;
     for (let a = 0; a < alphabetList.length; a++) {
-
         find = guesses.find(f=> f.letter === alphabetList[a]);
         if(!find){
             find= new Guess(null, alphabetList[a], GuessState.UNUSED);
@@ -177,25 +173,17 @@ const buildGame = (phrase, onlyPhraseLetters, allowedTries) => {
     }, longest_word);
     words = padWords(words, longest_word_length + 2);
     let tiles = makeTiles(words);
-    const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase) : initializeAllGuesses();
-    return new Game(GameState.FRESH, tiles, guesses, allowedTries);
+    let guesses;
+    let paddedGuesses;
+    if(onlyPhraseLetters){
+        [guesses, paddedGuesses] = initializeLetterFromPhraseGuesses(phrase);
+        return new Game(GameState.FRESH, tiles, guesses, paddedGuesses, allowedTries);
+    }else{
+        guesses = initializeAllGuesses();
+        return new Game(GameState.FRESH, tiles, guesses, [], allowedTries);
+    }
 }
 
-const phrase = ["zebra","Prompt Engineering", "Data Leaking"]; 
-let round = 0;
-document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame(phrase[round], true, 200); // playing the first round
-    const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
-    alpha.classList.remove('hidden');
-    //phrase = ["Prompt Engineering", "Data Leaking"]; //playing round 2 & 3 
-    introScreen(); //1st is intro screen 
-    document.querySelector('.btn-start').addEventListener('click', function() {
-        //roundStart(); //load the start button
-        startbttn(); //load start round button
-        nextRound(); //load the next round button
-        resetRound();
-    });
-});
 const introScreen = () => { //start the whole game with the intro screen
     const intro = document.createElement('div');
     intro.className = 'introScreen ';
@@ -218,30 +206,16 @@ const introScreen = () => { //start the whole game with the intro screen
     });
 };
 
-/*const roundStart = () => { //starting the auto guessing 
-    const getStarted = document.querySelector('.round-start');
-    //put the start button into the game button container 
-    getStarted.addEventListener('click', () => {
-        game.autoGuesser(); //start the game
-    }); //end eventListner
-}; */
-
-//function for resetting and reloading next prompt 
 const resetRound = () => {
-    // playing round 2 & 3
     const getNext = document.querySelector('.next'); //get the next button
-    //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
-    //console.log("inside resetRound this is alpha", alpha);
-    //alpha.classList.remove('hidden');
     getNext?.addEventListener('click', () => {
-        if (round < phrase.length - 1) { // noted 
+        if (round < phrase.length - 1) { // noted
             prompt("next button pushed"); //start the game
-        const getBoardWrap:any = document.getElementById("boardWrap"); 
+        const getBoardWrap:any = document.getElementById("boardWrap");
         const getAlpha:any = document.getElementById("alphawrap");
         while (getBoardWrap?.hasChildNodes()) { //remove old board
              getBoardWrap.removeChild(getBoardWrap.firstChild);
-        }//reset the round and build the next round
-            //trigger the buttons to come back
+        }
         while (getAlpha?.hasChildNodes()) { //remove old board
             getAlpha.removeChild(getAlpha.firstChild);
         }
@@ -250,26 +224,16 @@ const resetRound = () => {
         }
         document.getElementById("boardWrap")?.remove();
         document.getElementById("alphawrap")?.remove();
-            //same way to delete the start bttn and next round button 
-           // startbttn(); //build the start button again
-           // nextRound(); // build next round button again
-            // add the alphabet back 
-        
         round ++;
         console.log(round, " check round");
         game = buildGame(phrase[round], true, 200);
-            //const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
-            //alpha.classList.remove('hidden');
-            //when i have alphabet here, then theres a double alphabet container.
-            //roundStart(); //if next round clicked then need to call this resetfunction 
         const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
         alpha.classList.remove('hidden');
-        }
-        else {
+        } else {
             prompt("go to end screen")
         }
-        
-    }); //end eventListner
+
+    });
 }
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
@@ -277,54 +241,37 @@ const startbttn = () => { //build the start round button trigger this before nex
     const getContainer = document.querySelector('#controls');
     getContainer.appendChild(gameButtons);
     const getGameButton = document.querySelector('.game-buttons'); //add this back in if you separate making the two different buttons
-    
-    //create the button to go into the div 
     const round = document.createElement('button');
     round.type = "button";
     round.className = "round-start";
     round.textContent = "START ROUND";
     getGameButton.append(round);
 
-    
+
     round.addEventListener('click', () => {
-        game.autoGuesser(); //start the game
+        game.autoGuesser();
     }); //end eventListner
 }
-const nextRound = () => { //build the next round button 
+const nextRound = () => { //build the next round button
     const nxtround = document.createElement('button');
     nxtround.type = "button";
     nxtround.className = "next";
     nxtround.textContent = "NEXT ROUND";
     const getGameButtons = document.querySelector('.game-buttons');
     getGameButtons.appendChild(nxtround);
-
 };
-// const displayAlphabet = () => {
-//     let symbols = alphabet();
-//     const container = document.createElement('div');
-//     container.className = 'alphabet-container hidden';
-//
-//     const firstHalf = symbols.slice(0, 13);
-//     const secondHalf = symbols.slice(13);
-//
-//     //create first row in html
-//     const firstRow = document.createElement('div');
-//     firstRow.classList.add('alphabet-row');
-//     firstHalf.forEach((letter) => {
-//         const div = document.createElement('div');
-//         div.textContent = letter;
-//         firstRow.appendChild(div);
-//     });
-//     const secondRow = document.createElement('div');
-//     secondRow.classList.add('alphabet-row');
-//     secondHalf.forEach((letter) => {
-//         const div = document.createElement('div');
-//         div.textContent = letter;
-//         secondRow.appendChild(div);
-//     });
-//     container.appendChild(firstRow);
-//     container.appendChild(secondRow);
-//     document.body.appendChild(container);
-// };
 
+const phrase = ["zebra","Prompt Engineering", "Data Leaking"];
+let round = 0;
 
+document.addEventListener("DOMContentLoaded", (event) => {
+    game = buildGame(phrase[round], true, 200); // playing the first round
+    const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+    alpha.classList.remove('hidden');
+    introScreen(); //1st is intro screen
+    document.querySelector('.btn-start').addEventListener('click', function() {
+        startbttn(); //load start round button
+        nextRound(); //load the next round button
+        resetRound();
+    });
+});

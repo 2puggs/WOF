@@ -122,21 +122,22 @@
     state;
     tiles;
     guesses;
+    paddedGuesses;
     allowedTries;
     currentGuesses;
     autoGuessCounter;
     interval;
-    constructor(state, tiles, guesses, allowedTries) {
+    constructor(state, tiles, guesses, paddedGuesses, allowedTries) {
       this.state = state;
       this.tiles = tiles;
       this.guesses = guesses;
+      this.paddedGuesses = paddedGuesses;
       this.allowedTries = allowedTries;
       this.currentGuesses = 0;
       this.autoGuessCounter = 0;
       this.interval = {};
     }
     updateGameState() {
-      console.log("Check for win");
       let allDone = true;
       for (let t = 0; t < this.tiles.length; t++) {
         for (let l = 0; l < this.tiles[t].length; l++) {
@@ -160,7 +161,6 @@
       }
     }
     makeGuess(guessId) {
-      console.log("makeGuess ", guessId);
       if (this.state === gameState_default.FRESH) {
         this.state = gameState_default.IN_PLAY;
       }
@@ -251,7 +251,6 @@
     return uniq;
   };
   var shuffle = (array) => {
-    console.log("array is: ", array);
     let currentIndex = array.length;
     let temporaryValue, randomIndex;
     while (0 !== currentIndex) {
@@ -261,21 +260,20 @@
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-    console.log("inside of shuffle");
-    console.log(array);
     return array;
   };
   var initializeLetterFromPhraseGuesses = (phrase2) => {
     phrase2 = phrase2.toUpperCase();
     const unique = findUnique(phrase2);
     let guesses = [];
+    let paddedGuesses = [];
     for (let u = 0; u < unique.length; u++) {
       let aGuess = new Guess(u, unique[u], guessState_default.FRESH);
       guesses.push(aGuess);
     }
     guesses = shuffle(guesses);
-    guesses = padGuesses(guesses);
-    return guesses;
+    paddedGuesses = padGuesses(guesses);
+    return [guesses, paddedGuesses];
   };
   var padGuesses = (guesses) => {
     const padded = [];
@@ -386,22 +384,16 @@
     }, longest_word);
     words = padWords(words, longest_word_length + 2);
     let tiles = makeTiles(words);
-    const guesses = onlyPhraseLetters ? initializeLetterFromPhraseGuesses(phrase2) : initializeAllGuesses();
-    return new Game(gameState_default.FRESH, tiles, guesses, allowedTries);
+    let guesses;
+    let paddedGuesses;
+    if (onlyPhraseLetters) {
+      [guesses, paddedGuesses] = initializeLetterFromPhraseGuesses(phrase2);
+      return new Game(gameState_default.FRESH, tiles, guesses, paddedGuesses, allowedTries);
+    } else {
+      guesses = initializeAllGuesses();
+      return new Game(gameState_default.FRESH, tiles, guesses, [], allowedTries);
+    }
   };
-  var phrase = ["zebra", "Prompt Engineering", "Data Leaking"];
-  var round = 0;
-  document.addEventListener("DOMContentLoaded", (event) => {
-    game = buildGame(phrase[round], true, 200);
-    const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
-    alpha.classList.remove("hidden");
-    introScreen();
-    document.querySelector(".btn-start").addEventListener("click", function() {
-      startbttn();
-      nextRound();
-      resetRound();
-    });
-  });
   var introScreen = () => {
     const intro = document.createElement("div");
     intro.className = "introScreen ";
@@ -471,4 +463,17 @@
     const getGameButtons = document.querySelector(".game-buttons");
     getGameButtons.appendChild(nxtround);
   };
+  var phrase = ["zebra", "Prompt Engineering", "Data Leaking"];
+  var round = 0;
+  document.addEventListener("DOMContentLoaded", (event) => {
+    game = buildGame(phrase[round], true, 200);
+    const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
+    alpha.classList.remove("hidden");
+    introScreen();
+    document.querySelector(".btn-start").addEventListener("click", function() {
+      startbttn();
+      nextRound();
+      resetRound();
+    });
+  });
 })();

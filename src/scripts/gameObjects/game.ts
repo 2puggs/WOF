@@ -8,15 +8,17 @@ export default class Game {
     state: GameState
     tiles: Tile[][]
     guesses: Guess[]
+    paddedGuesses: Guess[]
     allowedTries: number
     currentGuesses: number
     autoGuessCounter: number
     interval: any
 
-    constructor(state:GameState, tiles:Tile[][], guesses: Guess[], allowedTries:number) {
+    constructor(state:GameState, tiles:Tile[][], guesses: Guess[], paddedGuesses: Guess[], allowedTries:number) {
         this.state = state;
         this.tiles = tiles;
         this.guesses = guesses;
+        this.paddedGuesses = paddedGuesses;
         this.allowedTries = allowedTries;
         this.currentGuesses = 0;
         this.autoGuessCounter = 0;
@@ -24,7 +26,6 @@ export default class Game {
     }
 
     updateGameState(){
-        console.log("Check for win");
         let allDone = true;
         for(let t=0; t<this.tiles.length; t++) {
             for (let l = 0; l < this.tiles[t].length; l++) {
@@ -49,7 +50,6 @@ export default class Game {
     }
 
     makeGuess(guessId){
-        console.log("makeGuess ",guessId);
         if(this.state === GameState.FRESH){
             this.state = GameState.IN_PLAY;
         }
@@ -105,7 +105,7 @@ export default class Game {
     autoGuess(t: this){
         console.log("what is t? ", t);
         console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
-        console.log("t guess" , t.guesses); 
+        console.log("t guess" , t.guesses);
         if(t.autoGuessCounter < t.guesses.length){
             t.makeGuess(t.autoGuessCounter)
             t.autoGuessCounter++;
