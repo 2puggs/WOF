@@ -102,12 +102,20 @@ export default class Game {
         }
         console.log(aGuess);
     }
-    autoGuess(t: this){
+
+    autoGuess(t: this) {
+        document.getElementById('fast')?.addEventListener("click", function() {
+            for (let i =0; i< t.guesses.length; i++ ) {
+                console.log("end round was clicked"); //go through all unique guesses and change their states and html respectively 
+                t.guesses[i].changeState(GuessState.GUESSED);
+                t.makeGuess(i);
+            } //close for 
+        });  
         console.log("what is t? ", t);
         console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
-        console.log("t guess" , t.guesses);
+        console.log("t guess" , t.guesses); // this has all info about the states
         if(t.autoGuessCounter < t.guesses.length){
-            t.makeGuess(t.autoGuessCounter)
+            t.makeGuess(t.autoGuessCounter);
             t.autoGuessCounter++;
         }else{
             t.stopAutoGuesser();

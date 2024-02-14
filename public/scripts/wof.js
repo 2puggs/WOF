@@ -230,6 +230,13 @@ var Game = class {
     console.log(aGuess);
   }
   autoGuess(t) {
+    document.getElementById("fast")?.addEventListener("click", function() {
+      for (let i = 0; i < t.guesses.length; i++) {
+        console.log("end round was clicked");
+        t.guesses[i].changeState(guessState_default.GUESSED);
+        t.makeGuess(i);
+      }
+    });
     console.log("what is t? ", t);
     console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
     console.log("t guess", t.guesses);
@@ -500,6 +507,14 @@ var nextRound = () => {
   const getGameButtons = document.querySelector(".game-buttons");
   getGameButtons?.appendChild(nxtround);
 };
+var fastRound = () => {
+  const fast = document.createElement("button");
+  fast.type = "button";
+  fast.id = "fast";
+  fast.textContent = "finish";
+  const getGameButtons = document.querySelector(".game-buttons");
+  getGameButtons?.appendChild(fast);
+};
 var phrase = json.words;
 var round = 0;
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -512,5 +527,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     startbttn();
     nextRound();
     resetRound();
+    fastRound();
   });
 });

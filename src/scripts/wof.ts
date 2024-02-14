@@ -259,18 +259,6 @@ function showEnd() { //function to show the outroscreen
     myDiv.appendChild(h1);
     getEnd.classList.remove('hidden');
 }
-
-/*function toggleActiveClass(curButton:string) {
-    var bttn = document.getElementById(curButton);
-    console.log(curButton);
-    if (bttn) {
-        console.log("active");
-        bttn?.classList.add('active');
-    } else {
-        console.error('button with id "' + curButton + '" not found in document.');
-    }
-} */
-
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
     gameButtons.className = 'game-buttons';
@@ -299,6 +287,23 @@ const nextRound = () => { //build the next round button
     getGameButtons?.appendChild(nxtround);
 };
 
+const fastRound = () => {
+    //make button that is an icon button 
+    const fast = document.createElement('button');
+    fast.type = "button";
+    fast.id = "fast";
+    fast.textContent = "finish"; //no text i want to show an icon instead 
+    const getGameButtons = document.querySelector('.game-buttons');
+    getGameButtons?.appendChild(fast);
+}
+
+/*const finishRound = () => {
+    const getNext = document.querySelector('#fast'); //get the next button
+    getNext?.addEventListener('click', () => {
+        prompt("word was guessd")
+    });
+}*/
+
 //const phrase = ["Large Language Models","Prompt Engineering", "Data Leaking", "Hallucination"];
 const phrase = json.words;
 let round = 0;
@@ -317,5 +322,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         startbttn(); //load start round button
         nextRound(); //load the next round button
         resetRound();
+        fastRound(); //load the quick round button 
+        //finishRound();
     });
 });
