@@ -15,6 +15,7 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@types/node": "^20.11.17",
     "@chialab/esbuild-plugin-html": "^0.18.0",
     "esbuild-sass-plugin": "^2.16.1",
     "esbuild-serve": "^1.0.1"

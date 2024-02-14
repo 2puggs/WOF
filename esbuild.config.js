@@ -9,6 +9,7 @@ esbuild
         entryPoints: ["./src/scripts/wof.ts", "./src/styles/style.scss", "./src/index.html"],
         outdir: "./public",
         bundle: true,
+        platform: 'node',
         plugins:[sassPlugin(), htmlPlugin()]
     })
     .then(()=> {

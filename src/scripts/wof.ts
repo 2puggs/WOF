@@ -5,12 +5,7 @@ import Guess from "./gameObjects/guess";
 import GuessState from "./gameObjects/states/guessState";
 import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
-//import allWords from './words.json';
-//console.log(phrase);
-//import * as fs from 'fs';
-//const allWords = fs.readFileSync('src/scripts/words.json', 'utf-8');
-//declare var require:any
-//import platform;
+const json = require("./words.json");
 
 let game: Game
 
@@ -236,15 +231,15 @@ const resetRound = () => {
             game = buildGame(phrase[round], true, 200);
             const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
             alpha.classList.remove('hidden');
-        } else { //call end screen function 
-            //hide main container 
+        } else { //call end screen function
+            //hide main container
             const cont = document.getElementsByClassName('container')[0];
             cont.classList.add('hidden');
             showEnd(); //call the end screen prompt
         }
     });
 } //end reset round
-const endScreen = () => { //creating the outro screen to look redwoody 
+const endScreen = () => { //creating the outro screen to look redwoody
     //add a div to the container with class
     const outro = document.createElement('div');
     outro.className = 'outroScreen hidden';
@@ -281,7 +276,7 @@ const startbttn = () => { //build the start round button trigger this before nex
     gameButtons.className = 'game-buttons';
     const getContainer = document.querySelector('#controls');
     getContainer?.appendChild(gameButtons);
-    const getGameButton = document.querySelector('.game-buttons'); 
+    const getGameButton = document.querySelector('.game-buttons');
     const round = document.createElement('button');
     round.type = "button";
     round.textContent = "START ROUND";
@@ -290,7 +285,7 @@ const startbttn = () => { //build the start round button trigger this before nex
 
     document.getElementById('start-round')?.addEventListener('click', () => {
         //toggleActiveClass('start-round');
-        game.autoGuesser(); 
+        game.autoGuesser();
 
     }); //end eventListner
 }
@@ -304,27 +299,20 @@ const nextRound = () => { //build the next round button
     getGameButtons?.appendChild(nxtround);
 };
 
-const phrase = ["Large Language Models","Prompt Engineering", "Data Leaking", "Hallucination"];
+//const phrase = ["Large Language Models","Prompt Engineering", "Data Leaking", "Hallucination"];
+const phrase = json.words;
 let round = 0;
-//const phrase = allWords; 
+//const phrase = allWords;
 
-//platform.node(fs);
-const fs = require('fs');
 
-fs.readFile('scripts\words.json', 'utf8', function (err, data) {
-    if (err) throw err; // we'll not consider error handling for now
-        var phrase = JSON.parse(data);
-        console.log(phrase);
-    });
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    
+
     game = buildGame(phrase[round], true, 200); // playing the first round
     const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     alpha.classList.remove('hidden');
     introScreen(); //1st is intro screen
     endScreen();
-
     document.querySelector('.btn-start')?.addEventListener('click', function() {
         startbttn(); //load start round button
         nextRound(); //load the next round button

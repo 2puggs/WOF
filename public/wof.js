@@ -1,10 +1,28 @@
 (() => {
   var __defProp = Object.defineProperty;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  };
   var __publicField = (obj, key, value) => {
     __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
     return value;
   };
+
+  // src/scripts/words.json
+  var require_words = __commonJS({
+    "src/scripts/words.json"(exports, module) {
+      module.exports = {
+        words: [
+          "Large Language Models",
+          "Prompt Engineering",
+          "Data Leaking",
+          "Hallucination"
+        ]
+      };
+    }
+  });
 
   // src/scripts/constants/displayConstants.ts
   var TILE_DIMENSION = 100;
@@ -238,6 +256,7 @@
   };
 
   // src/scripts/wof.ts
+  var json = require_words();
   var game;
   var initializeAllGuesses = () => {
     const guesses = [];
@@ -490,7 +509,7 @@
     const getGameButtons = document.querySelector(".game-buttons");
     getGameButtons == null ? void 0 : getGameButtons.appendChild(nxtround);
   };
-  var phrase = ["Large Language Models", "Prompt Engineering", "Data Leaking", "Hallucination"];
+  var phrase = json.words;
   var round = 0;
   document.addEventListener("DOMContentLoaded", (event) => {
     var _a;
