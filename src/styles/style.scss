@@ -6,24 +6,55 @@ $card-back-color: rgb(212, 215, 212);
 $card-edge-color: rgb(76, 130, 92);
 $revealed-tile-background-color: white;
 $revealed-tile-color: black;
-$tile-dimension: 45px;
-$hover-color:  rgb(177, 221, 136);
+$tile-dimension: 55px;
+$hover-color: rgba(22,21,19,0.12);
+$box-width: 50%;
+$max-box-width: 400px;
+
+
+.outroScreen {
+  background-color:rgb(251, 249, 248); //rgb-50
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+h1 {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+  width: 100%;
+}
+.outro-container {
+  background-color: #FCEDD9;
+  border: 1px solid rgba(22,21,19,.4);
+  display:inline flex;
+  width: $box-width;
+  max-width: $max-box-width;
+  border-radius: .375rem; //panel-border-radius
+  text-align: center;
+  padding: 2rem;
+
+}
 
 .container {
   display:flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: $game_height;
-  margin-bottom: 15px;;
+  height:100%;
+  min-height:100vh;
+  margin-bottom: 15px;
 }
 
 #board{
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  height: $game_height;
-  width: 100%;
 }
 
 #board .revealed {
@@ -32,9 +63,8 @@ $hover-color:  rgb(177, 221, 136);
 }
 
 .btn-start {
-  font-size: 26px;
+  font-size: 32px;
   font-family:   -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  border: 2px solid black;
   background-color: rgb(241,240,235) ;
   box-shadow: 5px 3px 6px 0 rgba(0, 0, 0, 0.32);
   color: black;
@@ -70,19 +100,21 @@ $hover-color:  rgb(177, 221, 136);
 .hidden {
   display: none;
 }
+
 .alphabet-container {
-  margin-top: 15px; // ToDo: fix double margins is top margin 0 or 15px?
+  margin-top: 1rem; // ToDo: fix double margins is top margin 0 or 15px?
   border:2px solid black;
   border-radius: 1.5px;
   box-shadow: 0px 4px 8px 0px transparentize($palette-brand-rgb-170, 0.84);
   max-width: 1000px;
   background-color: $palette-brand-rgb-10;
+  padding: 0 0.5rem 1rem 0.5rem;
 }
 
 .alphabet-row {
   display:flex;
   font-weight: 200;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .alphabet-row > .guess {
@@ -153,4 +185,45 @@ html, body {
   color: $palette-neutral-rgb-180;
   font-family: BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
+}
+
+
+#start-round, #next {
+  display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    background-color: rgb(241,240,235);
+    color: rgba(22,21,19,1); //oj-core=text-color-primary;
+    cursor: pointer;
+    height: 2.75rem; //oj-button-sm-height -> make smaller andm ae text larger and change text style 
+    font-weight: 400;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    border-radius: 0.25rem; //oj-core-border-radius-md
+}
+
+#start-round:hover, #next:hover{
+  background-color: $hover-color; //oj-palette-neutral-rgb
+}
+
+#next.active {
+  background-color: rgba(22, 21, 19,0.17);
+  //border-color: rgba(22, 21, 19,0.4); //oj-core-text-color-disabled
+  color: rgba(22, 21, 19,0.47);
+}
+
+#start-round.active {
+  background-color: rgba(22, 21, 19,0.17);
+  //border-color: rgba(22, 21, 19,0.40);
+  color: rgba(22, 21, 19,0.47); //oj-core-text-color-disabled
+}
+
+.game-buttons {
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+  &button {
+    color: #161513;
+    border: 1px solid rgba(22, 21, 19, 0.50);
+    font-size: 0.85938rem;
+  }
 }

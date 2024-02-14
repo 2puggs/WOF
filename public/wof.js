@@ -230,7 +230,7 @@
       }
     }
     autoGuesser() {
-      this.interval = setInterval(this.autoGuess, 1e3, this);
+      this.interval = setInterval(this.autoGuess, 2e3, this);
     }
     stopAutoGuesser() {
       clearInterval(this.interval);
@@ -420,11 +420,10 @@
     });
   };
   var resetRound = () => {
-    const getNext = document.querySelector(".next");
+    const getNext = document.querySelector("#next");
     getNext == null ? void 0 : getNext.addEventListener("click", () => {
       var _a, _b;
       if (round < phrase.length - 1) {
-        prompt("next button pushed");
         const getBoardWrap = document.getElementById("boardWrap");
         const getAlpha = document.getElementById("alphawrap");
         while (getBoardWrap == null ? void 0 : getBoardWrap.hasChildNodes()) {
@@ -444,41 +443,63 @@
         const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
         alpha.classList.remove("hidden");
       } else {
-        prompt("go to end screen");
+        const cont = document.getElementsByClassName("container")[0];
+        cont.classList.add("hidden");
+        showEnd();
       }
     });
   };
+  var endScreen = () => {
+    const outro = document.createElement("div");
+    outro.className = "outroScreen hidden";
+    document.body.appendChild(outro);
+    const outroContainer = document.createElement("div");
+    outroContainer.className = "outro-container";
+    outro.appendChild(outroContainer);
+  };
+  function showEnd() {
+    const getEnd = document.getElementsByClassName("outroScreen hidden")[0];
+    var myDiv = document.getElementsByClassName("outro-container")[0];
+    var h1 = document.createElement("h1");
+    h1.textContent = "Thank you for playing";
+    getEnd.appendChild(myDiv);
+    myDiv.appendChild(h1);
+    getEnd.classList.remove("hidden");
+  }
   var startbttn = () => {
+    var _a;
     const gameButtons = document.createElement("div");
     gameButtons.className = "game-buttons";
     const getContainer = document.querySelector("#controls");
-    getContainer.appendChild(gameButtons);
+    getContainer == null ? void 0 : getContainer.appendChild(gameButtons);
     const getGameButton = document.querySelector(".game-buttons");
     const round2 = document.createElement("button");
     round2.type = "button";
-    round2.className = "round-start";
     round2.textContent = "START ROUND";
-    getGameButton.append(round2);
-    round2.addEventListener("click", () => {
+    round2.id = "start-round";
+    getGameButton == null ? void 0 : getGameButton.append(round2);
+    (_a = document.getElementById("start-round")) == null ? void 0 : _a.addEventListener("click", () => {
       game.autoGuesser();
     });
   };
   var nextRound = () => {
     const nxtround = document.createElement("button");
     nxtround.type = "button";
-    nxtround.className = "next";
+    nxtround.id = "next";
     nxtround.textContent = "NEXT ROUND";
     const getGameButtons = document.querySelector(".game-buttons");
-    getGameButtons.appendChild(nxtround);
+    getGameButtons == null ? void 0 : getGameButtons.appendChild(nxtround);
   };
-  var phrase = ["zebra", "Prompt Engineering", "Data Leaking"];
+  var phrase = ["Large Language Models", "Prompt Engineering", "Data Leaking", "Hallucination"];
   var round = 0;
   document.addEventListener("DOMContentLoaded", (event) => {
+    var _a;
     game = buildGame(phrase[round], true, 200);
     const alpha = document.getElementsByClassName("alphabet-container hidden")[0];
     alpha.classList.remove("hidden");
     introScreen();
-    document.querySelector(".btn-start").addEventListener("click", function() {
+    endScreen();
+    (_a = document.querySelector(".btn-start")) == null ? void 0 : _a.addEventListener("click", function() {
       startbttn();
       nextRound();
       resetRound();

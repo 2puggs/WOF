@@ -5,6 +5,12 @@ import Guess from "./gameObjects/guess";
 import GuessState from "./gameObjects/states/guessState";
 import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
+//import allWords from './words.json';
+//console.log(phrase);
+//import * as fs from 'fs';
+//const allWords = fs.readFileSync('src/scripts/words.json', 'utf-8');
+//declare var require:any
+//import platform;
 
 let game: Game
 
@@ -207,69 +213,119 @@ const introScreen = () => { //start the whole game with the intro screen
 };
 
 const resetRound = () => {
-    const getNext = document.querySelector('.next'); //get the next button
+    const getNext = document.querySelector('#next'); //get the next button
     getNext?.addEventListener('click', () => {
+       // toggleActiveClass('next');
         if (round < phrase.length - 1) { // noted
-            prompt("next button pushed"); //start the game
-        const getBoardWrap:any = document.getElementById("boardWrap");
-        const getAlpha:any = document.getElementById("alphawrap");
-        while (getBoardWrap?.hasChildNodes()) { //remove old board
-             getBoardWrap.removeChild(getBoardWrap.firstChild);
+           // prompt("next button pushed");
+            const getBoardWrap:any = document.getElementById("boardWrap");
+            const getAlpha:any = document.getElementById("alphawrap");
+            while (getBoardWrap?.hasChildNodes()) { //remove old board
+                getBoardWrap.removeChild(getBoardWrap.firstChild);
+            }
+            while (getAlpha?.hasChildNodes()) { //remove old board
+                getAlpha.removeChild(getAlpha.firstChild);
+            }
+            while (getAlpha?.hasChildNodes()) { //remove old board
+                getAlpha.removeChild(getAlpha.firstChild);
+            }
+            document.getElementById("boardWrap")?.remove();
+            document.getElementById("alphawrap")?.remove();
+            round ++;
+            console.log(round, " check round");
+            game = buildGame(phrase[round], true, 200);
+            const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
+            alpha.classList.remove('hidden');
+        } else { //call end screen function 
+            //hide main container 
+            const cont = document.getElementsByClassName('container')[0];
+            cont.classList.add('hidden');
+            showEnd(); //call the end screen prompt
         }
-        while (getAlpha?.hasChildNodes()) { //remove old board
-            getAlpha.removeChild(getAlpha.firstChild);
-        }
-        while (getAlpha?.hasChildNodes()) { //remove old board
-            getAlpha.removeChild(getAlpha.firstChild);
-        }
-        document.getElementById("boardWrap")?.remove();
-        document.getElementById("alphawrap")?.remove();
-        round ++;
-        console.log(round, " check round");
-        game = buildGame(phrase[round], true, 200);
-        const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
-        alpha.classList.remove('hidden');
-        } else {
-            prompt("go to end screen")
-        }
-
     });
+} //end reset round
+const endScreen = () => { //creating the outro screen to look redwoody 
+    //add a div to the container with class
+    const outro = document.createElement('div');
+    outro.className = 'outroScreen hidden';
+    document.body.appendChild(outro);
+    //create a container for the button to be placed
+    const outroContainer = document.createElement('div');
+    outroContainer.className = 'outro-container';
+    outro.appendChild(outroContainer);
 }
+
+function showEnd() { //function to show the outroscreen
+    const getEnd = document.getElementsByClassName('outroScreen hidden')[0];
+    var myDiv = document.getElementsByClassName('outro-container')[0];
+    var h1 = document.createElement('h1');
+    h1.textContent = "Thank you for playing";
+    getEnd.appendChild(myDiv); //append to intro screen
+    myDiv.appendChild(h1);
+    getEnd.classList.remove('hidden');
+}
+
+/*function toggleActiveClass(curButton:string) {
+    var bttn = document.getElementById(curButton);
+    console.log(curButton);
+    if (bttn) {
+        console.log("active");
+        bttn?.classList.add('active');
+    } else {
+        console.error('button with id "' + curButton + '" not found in document.');
+    }
+} */
+
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
     gameButtons.className = 'game-buttons';
     const getContainer = document.querySelector('#controls');
-    getContainer.appendChild(gameButtons);
-    const getGameButton = document.querySelector('.game-buttons'); //add this back in if you separate making the two different buttons
+    getContainer?.appendChild(gameButtons);
+    const getGameButton = document.querySelector('.game-buttons'); 
     const round = document.createElement('button');
     round.type = "button";
-    round.className = "round-start";
     round.textContent = "START ROUND";
-    getGameButton.append(round);
+    round.id = "start-round"
+    getGameButton?.append(round);
 
+    document.getElementById('start-round')?.addEventListener('click', () => {
+        //toggleActiveClass('start-round');
+        game.autoGuesser(); 
 
-    round.addEventListener('click', () => {
-        game.autoGuesser();
     }); //end eventListner
 }
+
 const nextRound = () => { //build the next round button
     const nxtround = document.createElement('button');
     nxtround.type = "button";
-    nxtround.className = "next";
+    nxtround.id = "next";
     nxtround.textContent = "NEXT ROUND";
     const getGameButtons = document.querySelector('.game-buttons');
-    getGameButtons.appendChild(nxtround);
+    getGameButtons?.appendChild(nxtround);
 };
 
-const phrase = ["zebra","Prompt Engineering", "Data Leaking"];
+const phrase = ["Large Language Models","Prompt Engineering", "Data Leaking", "Hallucination"];
 let round = 0;
+//const phrase = allWords; 
+
+//platform.node(fs);
+const fs = require('fs');
+
+fs.readFile('scripts\words.json', 'utf8', function (err, data) {
+    if (err) throw err; // we'll not consider error handling for now
+        var phrase = JSON.parse(data);
+        console.log(phrase);
+    });
 
 document.addEventListener("DOMContentLoaded", (event) => {
+    
     game = buildGame(phrase[round], true, 200); // playing the first round
     const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     alpha.classList.remove('hidden');
     introScreen(); //1st is intro screen
-    document.querySelector('.btn-start').addEventListener('click', function() {
+    endScreen();
+
+    document.querySelector('.btn-start')?.addEventListener('click', function() {
         startbttn(); //load start round button
         nextRound(); //load the next round button
         resetRound();

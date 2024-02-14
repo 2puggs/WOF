@@ -114,7 +114,7 @@ export default class Game {
         }
     }
     autoGuesser(){
-        this.interval = setInterval(this.autoGuess, 1000, this);
+        this.interval = setInterval(this.autoGuess, 2000, this);
     }
     stopAutoGuesser(){
         clearInterval(this.interval)
