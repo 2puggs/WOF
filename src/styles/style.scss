@@ -1,16 +1,22 @@
 @import "./viewports";
 @import "./pallet";
+@import "./typography";
 
 $game_height: 90%;
 $card-back-color: rgb(212, 215, 212);
 $card-edge-color: rgb(76, 130, 92);
 $revealed-tile-background-color: white;
 $revealed-tile-color: black;
-$tile-dimension: 55px;
+$tile-dimension: 65px;
 $hover-color: rgba(22,21,19,0.12);
 $box-width: 50%;
 $max-box-width: 400px;
 
+.icon-test {
+  @include iconDisplay("\f11c");
+  height:3rem;
+  width: 3rem;
+}
 
 .outroScreen {
   background-color:rgb(251, 249, 248); //rgb-50
@@ -102,19 +108,20 @@ h1 {
 }
 
 .alphabet-container {
-  margin-top: 1rem; // ToDo: fix double margins is top margin 0 or 15px?
+  margin-top: 1.5rem;
   border:2px solid black;
-  border-radius: 1.5px;
+  border-radius: 5px;
   box-shadow: 0px 4px 8px 0px transparentize($palette-brand-rgb-170, 0.84);
-  max-width: 1000px;
+  min-width: 80vw;
   background-color: $palette-brand-rgb-10;
-  padding: 0 0.5rem 1rem 0.5rem;
+  //padding: 0 0.5rem 1rem 0.5rem;
 }
 
 .alphabet-row {
   display:flex;
-  font-weight: 200;
-  font-size: 26px;
+  font-weight: 350;
+  font-size: 30px;
+  padding:2px;
 }
 
 .alphabet-row > .guess {
@@ -124,11 +131,12 @@ h1 {
   text-align: center;
 
   &.fresh{
-    height: 20px;
-    width:20px;
+    //height: 20px;
+    //width:20px;
   }
   &.guessed{
-    display:none;
+    color:red;
+    font-weight: 200;
   }
 
   &.unused{
@@ -139,7 +147,7 @@ h1 {
 
 .tile {
   align-self: flex-start;
-  font-size: 35px;
+  //font-size: 35px;
   font-weight: 600;
   text-align: center;
   margin-right: 2px;
@@ -157,7 +165,7 @@ h1 {
     background-color: $revealed-tile-background-color;
     color: $revealed-tile-color;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-    font-size: 30px;
+    font-size: 45px;
   }
   &.edge{
     background-color: $card-edge-color;
@@ -188,18 +196,24 @@ html, body {
 }
 
 
-#start-round, #next {
+#start-round, #next, #fast {
   display: inline-block;
-    padding: 5px;
-    margin: 5px;
-    background-color: rgb(241,240,235);
-    color: rgba(22,21,19,1); //oj-core=text-color-primary;
-    cursor: pointer;
-    height: 2.75rem; //oj-button-sm-height -> make smaller andm ae text larger and change text style 
-    font-weight: 400;
-    user-select: none;
-    transition: background-color 0.3s ease;
-    border-radius: 0.25rem; //oj-core-border-radius-md
+  padding: 5px;
+  margin: 5px;
+  font-size: 15px;
+  background-color: rgb(241,240,235);
+  color: rgba(22,21,19,1); //oj-core=text-color-primary;
+  cursor: pointer;
+  height: 2.75rem; //oj-button-sm-height -> make smaller andm ae text larger and change text style 
+  font-weight: 400;
+  user-select: none;
+  transition: background-color 0.3s ease;
+  border-radius: 0.25rem; //oj-core-border-radius-md
+  vertical-align: middle;
+}
+#fast {
+  @include iconDisplay("\f131");
+  font-size: 1.8rem;
 }
 
 #start-round:hover, #next:hover{
@@ -216,11 +230,6 @@ html, body {
   background-color: rgba(22, 21, 19,0.17);
   //border-color: rgba(22, 21, 19,0.40);
   color: rgba(22, 21, 19,0.47); //oj-core-text-color-disabled
-}
-
-#fast {
-  height: 2.75rem;
-  width:2.75rem;
 }
 
 .game-buttons {

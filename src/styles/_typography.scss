@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "OracleIcon";
+    src: url('ojuxIconFont_Rg.ttf') format('truetype');
+}
+
+$icon-fonts:"OracleIcon", sans-serif; 
+
+@mixin iconDisplay($icon) {
+    font-family: $icon-fonts;
+    color: black;
+    &::before {
+        content: $icon;
+    }
+} 

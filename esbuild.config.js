@@ -10,7 +10,10 @@ esbuild
         outdir: "./public",
         bundle: true,
         platform: 'node',
-        plugins:[sassPlugin(), htmlPlugin()]
+        plugins:[sassPlugin(), htmlPlugin()],
+        loader: {
+            '.ttf': 'dataurl'
+        }
     })
     .then(()=> {
         esbuildServe({},{port: 3030, servedir:'./dist'}).then(()=> console.log("ES Build complete"))

@@ -521,7 +521,7 @@
     const fast = document.createElement("button");
     fast.type = "button";
     fast.id = "fast";
-    fast.textContent = "finish";
+    fast.className = ".oj-fwk-icon-checkbox-mixed:before";
     const getGameButtons = document.querySelector(".game-buttons");
     getGameButtons == null ? void 0 : getGameButtons.appendChild(fast);
   };

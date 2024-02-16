@@ -292,17 +292,12 @@ const fastRound = () => {
     const fast = document.createElement('button');
     fast.type = "button";
     fast.id = "fast";
-    fast.textContent = "finish"; //no text i want to show an icon instead 
+    fast.className = ".oj-fwk-icon-checkbox-mixed:before";
+   // fast.textContent = "finish"; //no text i want to show an icon instead 
     const getGameButtons = document.querySelector('.game-buttons');
     getGameButtons?.appendChild(fast);
 }
 
-/*const finishRound = () => {
-    const getNext = document.querySelector('#fast'); //get the next button
-    getNext?.addEventListener('click', () => {
-        prompt("word was guessd")
-    });
-}*/
 
 //const phrase = ["Large Language Models","Prompt Engineering", "Data Leaking", "Hallucination"];
 const phrase = json.words;
