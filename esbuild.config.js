@@ -13,7 +13,7 @@ esbuild
         plugins:[sassPlugin(), htmlPlugin()],
         loader: {
             '.ttf': 'dataurl',
-            '.mp3': 'dataurl'
+            '.mp3': 'dataurl' // <--- Here
         }
     })
     .then(()=> {

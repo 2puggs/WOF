@@ -8,6 +8,7 @@ import GameState from "./gameObjects/states/gameState";
 import {Howl, Howler} from 'howler';
 
 const buttonSound = require("../sounds/guessingLetters.mp3");
+// Import all sounds here
 const json = require("./words.json");
 
 
@@ -268,12 +269,13 @@ function showEnd() { //function to show the outroscreen
 
 
 function intializeButton(){
-    const soundButton = document.getElementById("soundButton");
-    
+    const soundButton = document.getElementById("soundButton"); // let the JS know about the button
+    // make the button function
     soundButton.onclick = () =>{
         var sound = new Howl({
             src: [buttonSound]
         });
+        // you could do something like a currentSound if you needed to change a specific binding
 
         sound.play();
     }
