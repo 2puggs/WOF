@@ -5,7 +5,13 @@ import Guess from "./gameObjects/guess";
 import GuessState from "./gameObjects/states/guessState";
 import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
+import {Howl, Howler} from 'howler';
+
+const buttonSound = require("../sounds/guessingLetters.mp3");
 const json = require("./words.json");
+
+
+
 
 let game: Game
 
@@ -260,6 +266,19 @@ function showEnd() { //function to show the outroscreen
     getEnd.classList.remove('hidden');
 }
 
+
+function intializeButton(){
+    const soundButton = document.getElementById("soundButton");
+    
+    soundButton.onclick = () =>{
+        var sound = new Howl({
+            src: [buttonSound]
+        });
+
+        sound.play();
+    }
+}
+
 /*const playStartMusic = () => {
     var music = new Audio('guessing letters.mp3');
     music.play();
@@ -296,12 +315,12 @@ const nextRound = () => { //build the next round button
 };
 
 const fastRound = () => {
-    //make button that is an icon button 
+    //make button that is an icon button
     const fast = document.createElement('button');
     fast.type = "button";
     fast.id = "fast";
     fast.className = ".oj-fwk-icon-checkbox-mixed:before";
-   // fast.textContent = "finish"; //no text i want to show an icon instead 
+   // fast.textContent = "finish"; //no text i want to show an icon instead
     const getGameButtons = document.querySelector('.game-buttons');
     getGameButtons?.appendChild(fast);
 }
@@ -315,7 +334,7 @@ let round = 0;
 
 
 document.addEventListener("DOMContentLoaded", (event) => {
-
+    intializeButton();
     game = buildGame(phrase[round], true, 200); // playing the first round
     const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     alpha.classList.remove('hidden');
@@ -325,7 +344,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         startbttn(); //load start round button
         nextRound(); //load the next round button
         resetRound();
-        fastRound(); //load the quick round button 
+        fastRound(); //load the quick round button
         //finishRound();
     });
 });

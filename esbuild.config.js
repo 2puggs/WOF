@@ -12,7 +12,8 @@ esbuild
         platform: 'node',
         plugins:[sassPlugin(), htmlPlugin()],
         loader: {
-            '.ttf': 'dataurl'
+            '.ttf': 'dataurl',
+            '.mp3': 'dataurl'
         }
     })
     .then(()=> {

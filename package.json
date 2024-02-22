@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "esbuild": "^0.19.11",
+    "howler": "^2.2.4",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
     "@chialab/esbuild-plugin-html": "^0.18.0",
+    "@types/node": "^20.11.17",
     "esbuild-sass-plugin": "^2.16.1",
     "esbuild-serve": "^1.0.1"
   }
