@@ -259,6 +259,12 @@ function showEnd() { //function to show the outroscreen
     myDiv.appendChild(h1);
     getEnd.classList.remove('hidden');
 }
+
+/*const playStartMusic = () => {
+    var music = new Audio('guessing letters.mp3');
+    music.play();
+  }
+  */
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
     gameButtons.className = 'game-buttons';
@@ -273,6 +279,8 @@ const startbttn = () => { //build the start round button trigger this before nex
 
     document.getElementById('start-round')?.addEventListener('click', () => {
         //toggleActiveClass('start-round');
+        //call the music
+        //playStartMusic();
         game.autoGuesser();
 
     }); //end eventListner

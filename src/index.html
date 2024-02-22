@@ -12,6 +12,7 @@
 <body>
 <span class="icon-test hidden"> </span>
 <div class="container hidden">
+    <h1> Phrases Related to AI </h1>
     <div id="board">    
 
 
@@ -23,6 +24,13 @@
 
     <div id="controls">
         <!--inject the buttons here-->
+        <button onclick="playSound()"> Guessing</button>
+        <script>
+            function playSound() {
+                const sound1 = new Audio('C:/Users/Miranda/SVNRepository/gitRepo/WOF/src/scripts/guessingLetters.mp3');
+                sound1.play();
+            }
+        </script>
     </div>
 </div>
 </body>

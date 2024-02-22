@@ -8,7 +8,7 @@ var require_words = __commonJS({
   "src/scripts/words.json"(exports2, module2) {
     module2.exports = {
       words: [
-        "Large Language Models",
+        "Open AI",
         "Prompt Engineering",
         "Data Leaking",
         "Hallucination"

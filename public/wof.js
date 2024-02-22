@@ -15,7 +15,7 @@
     "src/scripts/words.json"(exports, module) {
       module.exports = {
         words: [
-          "Large Language Models",
+          "Open AI",
           "Prompt Engineering",
           "Data Leaking",
           "Hallucination"
