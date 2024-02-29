@@ -3,6 +3,14 @@ import Tile from "./tile";
 import TileState from "./states/tileState";
 import Guess from "./guess";
 import GuessState from "./states/guessState";
+import {Howl, Howler} from 'howler';
+
+const loseSoundmp3 = require("../../sounds/buzzer.mp3");
+const correctSoundmp3 = require("../../sounds/correctGuess.mp3");
+const revealSoundmp3 = require("../../sounds/letterReveal.mp3");
+let flag = false;
+// Import all sounds here
+
 
 export default class Game {
     state: GameState
@@ -13,6 +21,9 @@ export default class Game {
     currentGuesses: number
     autoGuessCounter: number
     interval: any
+    loseSound: Howl
+    guessCorrect: Howl
+    revealedSound: Howl
 
     constructor(state:GameState, tiles:Tile[][], guesses: Guess[], paddedGuesses: Guess[], allowedTries:number) {
         this.state = state;
@@ -23,6 +34,18 @@ export default class Game {
         this.currentGuesses = 0;
         this.autoGuessCounter = 0;
         this.interval = {};
+        this.loseSound = new Howl({
+            src: [loseSoundmp3],
+            format: ['mp3']
+        });
+        this.guessCorrect = new Howl({
+            src: [correctSoundmp3],
+            format: ['mp3']
+        });
+        this.revealedSound = new Howl({
+            src: [revealSoundmp3],
+            format: ['mp3']
+        });
     }
 
     updateGameState(){
@@ -31,16 +54,21 @@ export default class Game {
             for (let l = 0; l < this.tiles[t].length; l++) {
                 if(this.tiles[t][l].state === TileState.GUESSABLE){
                     allDone = false;
-                   break;
+                    break;
                 }
             }
         }
         if(allDone){
             this.state = GameState.WON;
-            console.log("You win");
-            this.stopAutoGuesser();
+            if (flag === false) {
+                console.log("Didn't guess before time ran out");
+                this.stopAutoGuesser();
+                this.loseSound.play(); //the buzz noise
+            } else {
+
+            }
         }else{
-            console.log("Check for lose");
+            //console.log("Check for lose"); 
             if(this.currentGuesses >= this.allowedTries){
                 console.log("Sorry you lose.");
                 this.state = GameState.LOST;
@@ -61,6 +89,7 @@ export default class Game {
                 for (let l = 0; l < this.tiles[t].length; l++) {
                     if (this.tiles[t][l].letter === this.guesses[guessId].letter) {
                         this.tiles[t][l].changeState(TileState.GUESSED);
+                        this.revealedSound.play();
                     }
                 }
             }
@@ -70,61 +99,33 @@ export default class Game {
 
     }
 
-    logBoard(){
-        let aRow = "";
-        for(let r=0; r<this.tiles.length; r++){
-            aRow += "===";
-            for(let c=0; c<this.tiles[r].length; c++){
-                switch (this.tiles[r][c].state){
-                    case TileState.GUESSABLE:
-                        aRow += "[-]";
-                        break;
-                    case TileState.GUESSED:
-                        aRow += "[" + this.tiles[r][c].letter + "]";
-                        break;
-                    default:
-                        aRow +="[X]";
-                }
-            }
-            aRow +="===\n";
-        }
-        console.log(aRow);
-        console.log("Guesses:");
-        let aGuess="";
-        for(let g=0; g<this.guesses.length; g++){
-            switch (this.guesses[g].state){
-                case GuessState.FRESH:
-                    aGuess += "["+this.guesses[g].letter+"]";
-                    break;
-                default:
-                    aGuess += "X"+this.guesses[g].letter+"X";
-            }
-        }
-        console.log(aGuess);
-    }
-
     autoGuess(t: this) {
         document.getElementById('fast')?.addEventListener("click", function() {
             for (let i =0; i< t.guesses.length; i++ ) {
-                console.log("end round was clicked"); //go through all unique guesses and change their states and html respectively 
+                flag = true;
+                //console.log("gussed correctly"); //go through all unique guesses and change their states and html respectively 
                 t.guesses[i].changeState(GuessState.GUESSED);
                 t.makeGuess(i);
-            } //close for 
+                //this.guessCorrect.play();
+            } 
         });  
-        console.log("what is t? ", t);
-        console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
-        console.log("t guess" , t.guesses); // this has all info about the states
+       //play the reveal letter sound 
+       // console.log("what is t? ", t);
+        //console.log("Auto Guess", t.guesses[t.autoGuessCounter]);
+        //console.log("t guess" , t.guesses); // this has all info about the states
         if(t.autoGuessCounter < t.guesses.length){
             t.makeGuess(t.autoGuessCounter);
             t.autoGuessCounter++;
         }else{
             t.stopAutoGuesser();
         }
-    }
+    } //close autoGuess
     autoGuesser(){
         this.interval = setInterval(this.autoGuess, 2000, this);
     }
     stopAutoGuesser(){
         clearInterval(this.interval)
     }
+
+    
 }

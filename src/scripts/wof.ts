@@ -7,7 +7,8 @@ import Game from "./gameObjects/game";
 import GameState from "./gameObjects/states/gameState";
 import {Howl, Howler} from 'howler';
 
-const buttonSound = require("../sounds/guessingLetters.mp3");
+const roundSnd = require("../sounds/puzzleSolved.mp3");
+const guessCorrect = require("../sounds/correctGuess.mp3");
 // Import all sounds here
 const json = require("./words.json");
 
@@ -139,7 +140,7 @@ const makeTiles = (words: string[]) => {
     let id = 0;
     const tiles = [];
     const boardElement = document.getElementById("board");
-    console.log(boardElement);
+    //console.log(boardElement);
     const boardWrap = document.createElement("div");
     boardWrap.setAttribute("id", "boardWrap");
     for (let w = 0; w < words.length; w++) {
@@ -234,7 +235,7 @@ const resetRound = () => {
             document.getElementById("boardWrap")?.remove();
             document.getElementById("alphawrap")?.remove();
             round ++;
-            console.log(round, " check round");
+            //console.log(round, " check round");
             game = buildGame(phrase[round], true, 200);
             const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
             alpha.classList.remove('hidden');
@@ -267,25 +268,6 @@ function showEnd() { //function to show the outroscreen
     getEnd.classList.remove('hidden');
 }
 
-
-function intializeButton(){
-    const soundButton = document.getElementById("soundButton"); // let the JS know about the button
-    // make the button function
-    soundButton.onclick = () =>{
-        var sound = new Howl({
-            src: [buttonSound]
-        });
-        // you could do something like a currentSound if you needed to change a specific binding
-
-        sound.play();
-    }
-}
-
-/*const playStartMusic = () => {
-    var music = new Audio('guessing letters.mp3');
-    music.play();
-  }
-  */
 const startbttn = () => { //build the start round button trigger this before nextRound() which builds the nextround button
     const gameButtons = document.createElement('div');
     gameButtons.className = 'game-buttons';
@@ -299,9 +281,12 @@ const startbttn = () => { //build the start round button trigger this before nex
     getGameButton?.append(round);
 
     document.getElementById('start-round')?.addEventListener('click', () => {
-        //toggleActiveClass('start-round');
         //call the music
-        //playStartMusic();
+        var sound = new Howl({
+            src: [roundSnd],
+            volume: 0.75
+            });
+            sound.play();
         game.autoGuesser();
 
     }); //end eventListner
@@ -325,6 +310,17 @@ const fastRound = () => {
    // fast.textContent = "finish"; //no text i want to show an icon instead
     const getGameButtons = document.querySelector('.game-buttons');
     getGameButtons?.appendChild(fast);
+
+   document.getElementById('fast')?.addEventListener('click', () => {
+        var correctG = new Howl({
+            src: [guessCorrect],
+            format: ['mp3'],
+            volume: 0.75
+        });
+        var idG = correctG.play(); // if you guess right 
+        correctG.rate(1.5, idG);
+        game.autoGuess(); // maybeee this will work
+    });
 }
 
 
@@ -336,7 +332,6 @@ let round = 0;
 
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    intializeButton();
     game = buildGame(phrase[round], true, 200); // playing the first round
     const alpha = document.getElementsByClassName('alphabet-container hidden')[0];
     alpha.classList.remove('hidden');
