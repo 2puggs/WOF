@@ -4,5 +4,6 @@
         "Prompt Engineering", 
         "Data Leaking", 
         "Hallucination"
-    ]
+    ],
+    "timing":1500
 }

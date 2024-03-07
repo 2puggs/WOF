@@ -4,6 +4,7 @@ import TileState from "./states/tileState";
 import Guess from "./guess";
 import GuessState from "./states/guessState";
 import {Howl, Howler} from 'howler';
+const gameConfig = require("../words.json");
 
 const loseSoundmp3 = require("../../sounds/buzzer.mp3");
 const correctSoundmp3 = require("../../sounds/correctGuess.mp3");
@@ -121,7 +122,7 @@ export default class Game {
         }
     } //close autoGuess
     autoGuesser(){
-        this.interval = setInterval(this.autoGuess, 2000, this);
+        this.interval = setInterval(this.autoGuess, gameConfig.timing, this);
     }
     stopAutoGuesser(){
         clearInterval(this.interval)
